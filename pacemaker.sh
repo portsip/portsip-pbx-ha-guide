@@ -2,8 +2,18 @@
 init(){
 	systemctl stop firewalld.service
 	systemctl disable firewalld.service
+	setenforce 0
+	ssh $1 "setenforce 0"
+	ssh $2 "setenforce 0"
 	ssh $1 "systemctl stop firewalld.service && systemctl disable firewalld.service"
 	ssh $2 "systemctl stop firewalld.service && systemctl disable firewalld.service"
+	sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/selinux/config
+	sed -i 's#SELINUX=permissive#SELINUX=disabled#g' /etc/selinux/config
+	ssh $1 "sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/selinux/config"
+	ssh $2 "sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/selinux/config"
+	ssh $1 "sed -i 's#SELINUX=permissive#SELINUX=disabled#g' /etc/selinux/config"
+	ssh $2 "sed -i 's#SELINUX=permissive#SELINUX=disabled#g' /etc/selinux/config"
+
 }
 init $1 $2
 install_pacemaker(){
@@ -36,6 +46,26 @@ install_drbd(){
 	mkdir -p /var/lib/pbx
         ssh $1 "mkdir -p /var/lib/pbx"
         ssh $2 "mkdir -p /var/lib/pbx"
+}
+install_docker(){
+  sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+  sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+  sudo yum makecache fast
+  sudo yum -y install docker-ce
+  systemctl start docker
+  systemctl enable docker
+  ssh $1 "yum install -y yum-utils device-mapper-persistent-data lvm2"
+  ssh $1 "yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo"
+  ssh $1 "yum makecache fast"
+  ssh $1 "yum -y install docker-ce"
+  ssh $1 "systemctl start docker"
+  ssh $1 "systemctl enable docker"
+  ssh $2 "yum install -y yum-utils device-mapper-persistent-data lvm2"
+  ssh $2 "yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo"
+  ssh $2 "yum makecache fast"
+  ssh $2 "yum -y install docker-ce"
+  ssh $2 "systemctl start docker"
+  ssh $2 "systemctl enable docker"
 }
 
 set_pacemaker_user $1 $2
