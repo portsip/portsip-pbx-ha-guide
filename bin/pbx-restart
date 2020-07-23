@@ -1,0 +1,6 @@
+#!/bin/bash
+pcs  resource restart drbd_devpath_master
+pcs resource restart vip 
+pcs resource restart src_pkt_ip 
+pcs resource restart datapath_fs 
+pcs resource restart  pbx 

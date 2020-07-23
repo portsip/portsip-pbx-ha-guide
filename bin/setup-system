@@ -1,0 +1,36 @@
+#!/bin/bash
+set -Eeo pipefail
+
+cd $(dirname "$0")
+
+nodename="$1"
+
+# install pacemaker, corosync, pcs
+yum install -y ntpdate pacemaker corosync pcs
+
+# sync time
+cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 2>/dev/null || :
+ntpdate time.windows.com && hwclock -w
+
+# set hostname
+hostnamectl set-hostname node1
+
+# set hostname resolve on all three nodes (/etc/hosts)
+
+# set ssh auth on all three nodes
+
+# set firewall
+systemctl disable firewalld.service
+systemctl stop firewalld.service
+iptables -F
+
+# set selinux
+setenforce 0 2>/dev/null || :
+sed -i.bak "s/SELINUX=enforcing/SELINUX=permissive/g" /etc/selinux/config
+
+systemctl start pcsd.service
+systemctl enable pcsd.service
+echo hacluster | passwd hacluster --stdin
+
+
+ssh-keygen -t rsa
