@@ -15,23 +15,23 @@ net {
   after-sb-2pri disconnect;
 }
 
-on node-1 {
-  address 192.168.1.90:7789;
+on ppptest01 {
+  address 192.168.1.93:7789;
   node-id 0;
 }
 
-on node-2 {
-  address 192.168.1.91:7789;
+on ppptest02 {
+  address 192.168.1.95:7789;
   node-id 1;
 }
 
-on node-3 {
-  address 192.168.1.92:7789;
+on ppptest03 {
+  address 192.168.1.96:7789;
   node-id 2;
 }
 
 connection-mesh {
-  hosts node-1 node-2 node-3;
+  hosts ppptest01 ppptest02 ppptest03;
   net {
       use-rle no;
   }

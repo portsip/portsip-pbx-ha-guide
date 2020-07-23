@@ -20,7 +20,7 @@ pcs resource cleanup  >/dev/null 2>&1
 create(){
 pcs cluster cib drbd_cfg
 pcs -f drbd_cfg resource create drbd_devpath ocf:linbit:drbd drbd_resource=pbxdata op monitor interval=10s
-pcs -f drbd_cfg resource master drbd_devpath_master drbd_devpath master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true
+pcs -f drbd_cfg resource master drbd_devpath_master drbd_devpath master-max=1 master-node-max=1 clone-max=3 clone-node-max=1 notify=true
 pcs cluster cib-push drbd_cfg --config
 pcs resource enable drbd_devpath_master
 pcs cluster cib vip_cfg
@@ -62,4 +62,4 @@ pcs resource enable pbx
 }
 init $1 $2
 create $3
-create_pbx
+#create_pbx

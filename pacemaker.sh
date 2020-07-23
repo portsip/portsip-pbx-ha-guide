@@ -75,4 +75,4 @@ pcs cluster start --all
 pcs cluster enable --all
 pcs property set stonith-enabled=false
 install_drbd $1 $2
-
+install_docker $1 $2
