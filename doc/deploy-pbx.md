@@ -109,10 +109,11 @@ ptest02 ptest03 node2和node3
 ./docker.sh ptest02 ptest03 66.175.222.20 123456 portsip/pbx:12
 ```
 ## 创建资源
-在master上操作就行
+在master上操作就行，如果不报错证明，安装完成。可通过./bin/pbx-status查看状态
 ```
 ./create_pacemaker_resources.sh  ptest02 ptest03  yourvip
 ```
+# 几个常用的命令
 ## 查看pbx状态
 ```
 ./bin/pbx-status
