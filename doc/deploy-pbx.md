@@ -102,6 +102,14 @@ scp  pbxdata.res ptest03:/etc/drbd.d/
 ptest02 ptest03 node2和node3
 ```
 ./drbd_init.sh ptest02 ptest03
+查看状态，如下就可以执行下面操作了，如果报错，需要检查drbd的配置是否正确
+[root@pptest02 portsip-pbx-ha-guide]# drbdadm status
+pbxdata1 role:Secondary
+  disk:UpToDate
+  pptest01 role:Secondary
+    peer-disk:UpToDate
+  pptest03 role:Secondary
+    peer-disk:UpToDate
 ```
 
 
