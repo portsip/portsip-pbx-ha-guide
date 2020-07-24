@@ -23,6 +23,7 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 ## 自动安装pacemaker 和drbd
 安装完成后重启，非常重要，非常重要，非常重要 在master上操作就行
 ```
+yum -y install git
 git clone https://github.com/portsip/portsip-pbx-ha-guide.git
 cd  portsip-pbx-ha-guide
 执行pacemaker.sh 等待包安装完成后根据提示输入账号密码
