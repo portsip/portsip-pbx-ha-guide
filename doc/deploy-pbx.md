@@ -26,7 +26,7 @@ Username: hacluster
 Password: 
 输入用户 hacluster 密码123456
 ```
-##linux lvm搭建配置
+## linux lvm搭建配置
 次步骤是可选择的，如果你想用lvm来替代你的硬盘或者分区，可以参考。
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
