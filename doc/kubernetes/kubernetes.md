@@ -7,14 +7,23 @@
 关闭防火墙
 
 # 添加节点
+
 ```
 pass
 ```
+# 设置master可调度 
+```
+kubectl patch nodes nodename -p '{"spec":{"taints":[]}}'
+```
+
 
 # 添加master
 ```
 pass
 
 ```
+
+
+
 
 
