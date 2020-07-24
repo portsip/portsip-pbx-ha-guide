@@ -122,4 +122,4 @@ ptest02 ptest03 node2和node3
 如果因为拉镜像导致执行失败，次步骤可以多次执行，直到成功
 ```
 ./bin/pbx-update ptest02 ptest03 66.175.222.20 123456 portsip/pbx:12
-``
+```
