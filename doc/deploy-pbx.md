@@ -32,18 +32,18 @@ Password:
 输入用户 hacluster 密码123456
 ```
 ## linux lvm搭建配置
-次步骤是可选择的，不想使用lvm，跳过次步骤，如果你想用lvm来替代你的硬盘或者分区，可以参考。
+当前步骤是可选择的，不想使用lvm，跳过即可，如果你想用lvm来替代你的硬盘或者分区，可以参考。
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
 pvcreate 你的硬盘名
 vgcreate pbxvg 你的硬盘名
 lvcreate -n pbxlv -L 128G pbxvg
-挂载点为/dev/pbxvg/pbxlv，如果你用lvm当drbd硬盘的话，直接/dev/pbxvg/pbxlv填写drbd配置文件中的
+挂载点为/dev/pbxvg/pbxlv，如果你用lvm当drbd硬盘的话，使用/dev/pbxvg/pbxlv填写drbd配置文件中的disk既可。
 ```
 ## 配置drbd
 只在master上面修改drbd的配置文件然后使用scp分发到各节点 ptest02、ptest03为节点二和节点三根据实际情况替换disk字段即可
 ```
-发送全局的配置文件到各节点
+发送全局配置文件到各节点
 cp -f  ./global_common.conf /etc/drbd.d/
 scp ./global_common.conf  ptest02:/etc/drbd.d/
 scp ./global_common.conf  ptest02:/etc/drbd.d/
@@ -90,7 +90,7 @@ connection-mesh {
 }
 
 }
-需要注意的是，如果每台机器的分区不一样，需要拷贝之前修改disk字段注明ptest01ip、ptest02ip、ptest03ip 需要修改成真实的ip
+需要注意的是，如果每台机器的分区不一样，需要拷贝之前修改disk字段注明ptest01ip、ptest02ip、ptest03ip需要修改成真实的ip
 拷贝到本机
 cp -f pbxdata.res /etc/drbd.d/
 拷贝到ptest02
@@ -102,7 +102,7 @@ scp  pbxdata.res ptest03:/etc/drbd.d/
 ptest02 ptest03 node2和node3
 ```
 ./drbd_init.sh ptest02 ptest03
-查看状态，如下就可以执行下面操作了，如果报错，需要检查drbd的配置是否正确
+查看状态如下,就可以执行下面操作了，如果报错，需要检查drbd的配置是否正确
 [root@pptest02 portsip-pbx-ha-guide]# drbdadm status
 pbxdata1 role:Secondary
   disk:UpToDate
@@ -117,7 +117,7 @@ pbxdata1 role:Secondary
 其中ptest02 ptest03 分别是node2和node3
 其中123456是PortSIP 数据库密码, 你可以自由地使用其他密码.
 66.175.222.20是PBX 运行容器运行的 IP地址，如果运行在公网，那么此处需要指定公网IP，如果是内网，则指定内网IP, 在本例中，使用的 IP 是66.175.222.20, 你需要根据实际情况来修改该 IP.
-如果因为拉镜像导致执行失败，次步骤可以多次执行，直到成功
+如果因为拉镜像导致执行失败，当前步骤可以多次执行，直到成功
 ```json
 ./docker.sh ptest02 ptest03 66.175.222.20 123456 portsip/pbx:12
 ```
@@ -137,11 +137,11 @@ pbxdata1 role:Secondary
 ./bin/pbx-restart
 ```
 ## 更新pbx
-
 其中ptest02 ptest03 分别是node2和node3
 其中123456是PortSIP 数据库密码, 你可以自由地使用其他密码.
-66.175.222.20是PBX 运行容器运行的 IP地址，如果运行在公网，那么此处需要指定公网IP，如果是内网，则指定内网IP, 在本例中，使用的 IP 是66.175.222.20, 你需要根据实际情况来修改该 IP.
-如果因为拉镜像导致执行失败，次步骤可以多次执行，直到成功 portsip/pbx:12为镜像的名字
+66.175.222.20是PBX 运行容器运行的 IP地址，如果运行在公网，那么此处需要指定公网IP，如果是内网，则指定内网IP, 在本例中，使用的 IP 是66.175.222.20, 你需要根据实际情况来修改该 IP
+其中portsip/pbx:12是要更新的版本，你可以自由地使用其他版本。
+如果因为拉镜像导致执行失败，次步骤可以多次执行
 ```
 ./bin/pbx-update ptest02 ptest03 66.175.222.20 123456 portsip/pbx:12
 ```
