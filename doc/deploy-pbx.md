@@ -86,8 +86,9 @@ scp  pbxdata.res ptest02:/etc/drbd.d/
 scp  pbxdata.res ptest03:/etc/drbd.d/
 ```
 ### 初始化drbd
+ptest02 ptest03 node2和node3
 ```
-./drbd_init.sh
+./drbd_init.sh ptest02 ptest03
 ```
 
 
