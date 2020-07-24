@@ -93,21 +93,11 @@ ptest02 ptest03 node2和node3
 
 
 ## 配置pbx
-所有节点
-
+其中ptest02 ptest03 分别是node2和node3
+其中123456是PortSIP 数据库密码, 你可以自由地使用其他密码.
+66.175.222.20是PBX 运行容器运行的 IP地址，如果运行在公网，那么此处需要指定公网IP，如果是内网，则指定内网IP, 在本例中，使用的 IP 是66.175.222.20, 你需要根据实际情况来修改该 IP.
 ```json
-sudo mkdir -p /var/lib/pbx/portsip
-sudo docker container run -d --name pbx --network=host -v /var/lib/pbx/portsip:/var/lib/portsip -v /etc/localtime:/etc/localtime:ro  -e POSTGRES_PASSWORD=123456 -e POSTGRES_LISTEN_ADDRESSES="*,127.0.0.1" -e IP_ADDRESS="192.168.1.130"  portsip/pbx:12
-...等待30s
-$ sudo docker stop -t 30 pbx
-$ sudo drbdadm status pbxdata
-...等待drbd同步完成
-
-
-
-
-
-
+./docker.sh ptest02 ptest03 66.175.222.20 123456 portsip/pbx:12
 
 ```
 ## 创建资源
