@@ -26,9 +26,17 @@ Username: hacluster
 Password: 
 输入用户 hacluster 密码123456
 ```
-
+##linux lvm搭建配置
+次步骤是可选择的，如果你想用lvm来替代你的硬盘或者分区，可以参考。
+```
+yum install -y yum-utils device-mapper-persistent-data lvm2
+pvcreate 你的硬盘名
+vgcreate pbxvg 你的硬盘名
+lvcreate -n pbxlv -L 128G pbxvg
+挂载点为/dev/pbxvg/pbxlv，如果你用lvm当drbd硬盘的话，直接/dev/pbxvg/pbxlv填写drbd配置文件中的
+```
 ## 配置drbd
-只在master上面修改drbd的配置文件然后使用scp分发到各节点 ptest02、ptest03为节点二和节点三根据实际情况替换
+只在master上面修改drbd的配置文件然后使用scp分发到各节点 ptest02、ptest03为节点二和节点三根据实际情况替换disk字段即可
 ```
 发送全局的配置文件到各节点
 cp -f  ./global_common.conf /etc/drbd.d/
