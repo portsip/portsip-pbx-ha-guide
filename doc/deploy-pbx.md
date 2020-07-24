@@ -77,13 +77,17 @@ connection-mesh {
 }
 
 }
-需要注意的是，如果每台机器的分区不一样，需要拷贝之前修改disk字段注明
+需要注意的是，如果每台机器的分区不一样，需要拷贝之前修改disk字段注明ptest01ip、ptest02ip、ptest03ip 需要修改成真实的ip
 拷贝到本机
 cp -f pbxdata.res /etc/drbd.d/
 拷贝到ptest02
 scp  pbxdata.res ptest02:/etc/drbd.d/
 拷贝到ptest03
 scp  pbxdata.res ptest03:/etc/drbd.d/
+```
+### 初始化drbd
+```
+./drbd_init.sh
 ```
 
 
@@ -97,6 +101,13 @@ sudo docker container run -d --name pbx --network=host -v /var/lib/pbx/portsip:/
 $ sudo docker stop -t 30 pbx
 $ sudo drbdadm status pbxdata
 ...等待drbd同步完成
+
+
+
+
+
+
+
 ```
 ## 创建资源
 在master上操作就行
