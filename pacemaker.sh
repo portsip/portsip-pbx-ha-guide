@@ -37,9 +37,9 @@ set_pacemaker_user(){
      	ssh $2 "mkdir -p /usr/lib/heartbeat/ && rm -rf /usr/lib/heartbeat/* && cp -f /usr/lib/ocf/lib/heartbeat/* /usr/lib/heartbeat/"
 }
 install_drbd(){
-	rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd;systemctl enable drbd
-        ssh $1 "rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd;systemctl enable drbd"
-        ssh $2 "rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd;systemctl enable drbd"
+	rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd
+        ssh $1 "rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd"
+        ssh $2 "rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd"
 	echo "drbd" >/etc/modules-load.d/drbd.conf;echo "drbd_transport_tcp" >>/etc/modules-load.d/drbd.conf
 	ssh $1 "echo "drbd" >/etc/modules-load.d/drbd.conf;echo "drbd_transport_tcp" >>/etc/modules-load.d/drbd.conf"
         ssh $2 "echo "drbd" >/etc/modules-load.d/drbd.conf;echo "drbd_transport_tcp" >>/etc/modules-load.d/drbd.conf"
