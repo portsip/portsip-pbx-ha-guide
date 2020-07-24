@@ -30,7 +30,7 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 ```
 ## 自动安装pacemaker 和drbd
-安装完成后重启，非常重要，非常重要，非常重要 在master上操作就行
+在master上操作就行
 ```
 yum -y install git
 git clone https://github.com/portsip/portsip-pbx-ha-guide.git
@@ -40,6 +40,7 @@ cd  portsip-pbx-ha-guide
 Username: hacluster
 Password: 
 输入用户 hacluster 密码123456
+后安装完成后重启所以的节点，非常重要，非常重要，非常重要 
 ```
 ## linux lvm搭建配置
 当前步骤是可选择的，不想使用lvm，跳过即可，如果你想用lvm来替代你的硬盘或者分区，可以参考。
