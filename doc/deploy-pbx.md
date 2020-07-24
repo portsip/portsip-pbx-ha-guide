@@ -96,12 +96,16 @@ ptest02 ptest03 node2和node3
 其中ptest02 ptest03 分别是node2和node3
 其中123456是PortSIP 数据库密码, 你可以自由地使用其他密码.
 66.175.222.20是PBX 运行容器运行的 IP地址，如果运行在公网，那么此处需要指定公网IP，如果是内网，则指定内网IP, 在本例中，使用的 IP 是66.175.222.20, 你需要根据实际情况来修改该 IP.
+如果因为拉镜像导致执行失败，次步骤可以多次执行，直到成功
 ```json
 ./docker.sh ptest02 ptest03 66.175.222.20 123456 portsip/pbx:12
-
 ```
 ## 创建资源
 在master上操作就行
 ```
 ./create_pacemaker_resources.sh  ptest02 ptest03  yourvip
 ```
+## 查看pbx状态
+./bin/pbx-status
+## 重启pbx
+./bin/pbx-restart
