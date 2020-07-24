@@ -28,7 +28,14 @@ Password:
 ```
 
 ## 配置drbd
- null
+只在master上面修改drbd的配置文件然后使用scp分发到各节点
+```
+发送全局的配置文件到各节点
+cp -f  ./global_common.conf /etc/drbd.d/
+scp ./global_common.conf  ptest02:/etc/drbd.d/
+scp ./global_common.conf  ptest03:/etc/drbd.d/
+
+```
 
 
 ## 配置pbx
