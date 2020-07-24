@@ -28,13 +28,62 @@ Password:
 ```
 
 ## 配置drbd
-只在master上面修改drbd的配置文件然后使用scp分发到各节点
+只在master上面修改drbd的配置文件然后使用scp分发到各节点 ptest02、ptest03为节点二和节点三根据实际情况替换
 ```
 发送全局的配置文件到各节点
 cp -f  ./global_common.conf /etc/drbd.d/
 scp ./global_common.conf  ptest02:/etc/drbd.d/
-scp ./global_common.conf  ptest03:/etc/drbd.d/
+scp ./global_common.conf  ptest02:/etc/drbd.d/
+配置drbd
+修改当前目录下pbxdata.res文件
+resource pbxdata {
 
+meta-disk internal;
+device /dev/drbd1;
+#disk /dev/pbxvg/pbxlv;
+disk 你的硬盘或者分区;
+
+syncer {
+  verify-alg sha1;
+}
+
+net {
+# allow-two-primaries no;
+  after-sb-0pri discard-zero-changes;
+  after-sb-1pri discard-secondary;
+  after-sb-2pri disconnect;
+}
+
+on ptest01 {
+  address ptest01ip:7789;
+  node-id 0;
+}
+
+on ptest02 {
+  address ptest02ip:7789;
+  node-id 1;
+}
+
+on ptest03 {
+  address ptest03ip:7789;
+  node-id 2;
+}
+
+connection-mesh {
+  hosts ptest01 ptest02 ptest03;
+  net {
+      use-rle no;
+  }
+}
+
+}
+需要注意的是，如果每台机器的分区不一样，需要拷贝之前修改disk字段注明
+拷贝到本机
+cp -f pbxdata.res /etc/drbd.d/
+拷贝到ptest02
+scp  pbxdata.res ptest02:/etc/drbd.d/
+拷贝到ptest03
+scp  pbxdata.res ptest03:/etc/drbd.d/
 ```
 
 
