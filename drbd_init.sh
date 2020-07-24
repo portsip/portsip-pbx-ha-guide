@@ -1,5 +1,6 @@
 #!/bin/bash
 systemctl start drbd
+sleep 1
 drbdadm create-md pbxdata
 drbdadm up pbxdata
 ssh $1 "systemctl start drbd; sleep 1;drbdadm create-md pbxdata;drbdadm up pbxdata"
