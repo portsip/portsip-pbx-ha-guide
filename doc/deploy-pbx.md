@@ -60,7 +60,7 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 ## 自动安装pacemaker 和drbd
 
-在master上操作就行： **3台节点中随机选择一台当做master**
+在master上操作就行： **3台节点中随机选择一台当做master, 本例中，我们用 pbx01做master**,
 
 ```
 yum -y install git
@@ -85,12 +85,18 @@ reboot
 
 
 ## Linux lvm搭建配置
-在每一台节点分别执行如下命令: (可以通过fdisk -l 查看到新添加的硬盘名字。)
+在每一台节点上分别执行如下命令查看 HA 要使用的硬盘名或者分区名，并记录下来：
+
+```
+fdisk -l
+```
+
+在每一台节点上分别执行如下命令：
 
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
-pvcreate 你的硬盘名
-vgcreate pbxvg 你的硬盘名
+pvcreate 该节点的硬盘名或者分区名
+vgcreate pbxvg 该节点的硬盘名或者分区名
 lvcreate -n pbxlv -L 128G pbxvg
 ```
 
@@ -99,7 +105,7 @@ lvcreate -n pbxlv -L 128G pbxvg
 
 
 ## 配置DRBD
-只需要在 master 节点上修改 DRBD 的配置文件然后使用 scp 分发到各节点。本例中 pbx02、pbx03为节点二和节点三，你需要根据实际情况替换 disk 字段。
+只需要在 master 节点上修改 DRBD 的配置文件然后使用 scp 分发到各节点。本例中 pbx02、pbx03为节点2和节点3，你需要根据实际情况替换 disk 字段。
 
 发送全局配置文件到各节点:
 
