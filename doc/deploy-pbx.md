@@ -124,7 +124,7 @@ drbdadm up pbxdata
 drbdadm -- --clear-bitmap new-current-uuid pbxdata
 drbdadm primary --force pbxdata
 mkfs.xfs /dev/drbd1
-drbdadm secondary pbxdatagit
+drbdadm secondary pbxdata
 ```
 
 
