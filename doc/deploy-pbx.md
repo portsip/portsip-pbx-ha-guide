@@ -105,7 +105,7 @@ lvcreate -n pbxlv -L 128G pbxvg
 
 
 ## 配置DRBD
-只需要在 master 节点上修改 DRBD 的配置文件然后使用 scp 分发到各节点。本例中 pbx02、pbx03为节点2和节点3，你需要根据实际情况替换 disk 字段。
+只需要在 master 节点上修改 DRBD 的配置文件然后使用 scp 分发到各节点。
 
 发送全局配置文件到各节点:
 
