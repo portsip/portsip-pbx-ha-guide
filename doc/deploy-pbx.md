@@ -60,7 +60,7 @@ lvcreate -n pbxlv -L 128G pbxvg
 发送全局配置文件到各节点
 cp -f  ./global_common.conf /etc/drbd.d/
 scp ./global_common.conf  ptest02:/etc/drbd.d/
-scp ./global_common.conf  ptest02:/etc/drbd.d/
+scp ./global_common.conf  ptest03:/etc/drbd.d/
 配置drbd
 修改当前目录下pbxdata.res文件
 resource pbxdata {
