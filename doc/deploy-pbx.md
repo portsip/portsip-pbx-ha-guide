@@ -114,17 +114,17 @@ scp  pbxdata.res ptest02:/etc/drbd.d/
 scp  pbxdata.res ptest03:/etc/drbd.d/
 ```
 ### 初始化drbd
-ptest02 ptest03 是node2和node3的主机名
 ```
-./drbd_init.sh ptest02 ptest03
-查看状态如下,就可以执行下面操作了，如果报错，需要检查drbd的配置是否正确
-[root@pptest02 portsip-pbx-ha-guide]# drbdadm status
-pbxdata1 role:Secondary
-  disk:UpToDate
-  pptest01 role:Secondary
-    peer-disk:UpToDate
-  pptest03 role:Secondary
-    peer-disk:UpToDate
+所有节点启动drbd systemctl status drbd查看状态是否为running
+systemctl start drbd
+所有节点执行 
+drbdadm create-md pbxdata
+drbdadm up pbxdata
+只在一台节点执行
+drbdadm -- --clear-bitmap new-current-uuid pbxdata
+drbdadm primary --force pbxdata
+mkfs.xfs /dev/drbd1
+drbdadm secondary pbxdatagit
 ```
 
 
