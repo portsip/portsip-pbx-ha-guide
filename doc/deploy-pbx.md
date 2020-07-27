@@ -85,7 +85,7 @@ reboot
 
 
 ## Linux lvm搭建配置
-在每一台节点分别执行如下命令: (可以通过fdisk -l 查看到新添加硬盘的名字。可以通过blkid -o list查看所有的分区)
+在每一台节点分别执行如下命令: (可以通过fdisk -l 查看到新添加硬盘的名字，可以通过blkid -o list查看所有的分区)
 
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
