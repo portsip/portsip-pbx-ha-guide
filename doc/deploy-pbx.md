@@ -18,8 +18,11 @@ EOF
 非常重要，非常重要，非常重要
 ```
 ptest02、ptest03分别是节点2和节点3 
-[root@ptest01 ~]# ssh-keygen -t rsa   #一直输入回车即可
+一直输入回车即可
+[root@ptest01 ~]# ssh-keygen -t rsa   
+输入ptest02密码
 [root@ptest01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub ptest02
+输入ptest03的密码
 [root@ptest01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub ptest03
 #测试免密码登录
 [root@ptest01 ~]# ssh ptest02 "w"
