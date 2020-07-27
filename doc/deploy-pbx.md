@@ -114,7 +114,7 @@ scp  pbxdata.res ptest02:/etc/drbd.d/
 scp  pbxdata.res ptest03:/etc/drbd.d/
 ```
 ### 初始化drbd
-ptest02 ptest03 node2和node3
+ptest02 ptest03 是node2和node3的主机名
 ```
 ./drbd_init.sh ptest02 ptest03
 查看状态如下,就可以执行下面操作了，如果报错，需要检查drbd的配置是否正确
