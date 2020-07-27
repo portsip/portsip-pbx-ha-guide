@@ -46,7 +46,7 @@ Password:
 后安装完成后重启所以的节点，非常重要，非常重要，非常重要 
 ```
 ## linux lvm搭建配置
-当前步骤是可选择的，不想使用lvm，跳过即可，如果你想用lvm来替代你的硬盘或者分区，可以参考。
+每一台节点都需要执行
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
 pvcreate 你的硬盘名
