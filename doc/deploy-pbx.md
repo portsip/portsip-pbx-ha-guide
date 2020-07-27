@@ -52,7 +52,7 @@ yum install -y yum-utils device-mapper-persistent-data lvm2
 pvcreate 你的硬盘名
 vgcreate pbxvg 你的硬盘名
 lvcreate -n pbxlv -L 128G pbxvg
-挂载点为/dev/pbxvg/pbxlv，如果你用lvm当drbd硬盘的话，使用/dev/pbxvg/pbxlv填写drbd配置文件中的disk既可。
+挂载点为/dev/pbxvg/pbxlv，128G是大小，根据实际情况更改，如果你用lvm当drbd硬盘的话，使用/dev/pbxvg/pbxlv填写drbd配置文件中的disk既可。
 ```
 ## 配置drbd
 只在master上面修改drbd的配置文件然后使用scp分发到各节点 ptest02、ptest03为节点二和节点三根据实际情况替换disk字段即可
