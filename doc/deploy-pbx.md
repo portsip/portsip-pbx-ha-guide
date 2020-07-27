@@ -60,7 +60,7 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 ## 自动安装pacemaker 和drbd
 
-在master上操作就行： （怎么指定master? 谁是 master?）
+在master上操作就行： **3台节点中随机选择一台当做master**
 
 ```
 yum -y install git
@@ -76,14 +76,16 @@ Username: hacluster
 Password: 
 ```
 
-输入用户 hacluster 密码123456后安装完成后重启所以的节点，非常重要，非常重要，非常重要 !
-
-(怎样重启节点？)
-
+输入用户 hacluster 密码123456后安装完成后，依次执行下面命令，重启所有的节点，非常重要，非常重要，非常重要 !
+```
+ssh pbx02 "reboot"
+ssh pbx03 "reboot"
+reboot
+```
 
 
 ## Linux lvm搭建配置
-在每一台节点分别执行如下命令: (硬盘名或者分区名怎么去查看? 怎么指定？)
+在每一台节点分别执行如下命令: (可以通过fdisk -l 查看到新添加的硬盘名字。)
 
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -92,7 +94,7 @@ vgcreate pbxvg 你的硬盘名
 lvcreate -n pbxlv -L 128G pbxvg
 ```
 
-上述命令中，挂载点为/dev/pbxvg/pbxlv，128G是硬盘或者分区大小，需要根据您的实际情况更改，**如果你用lvm当drbd硬盘的话，使用/dev/pbxvg/pbxlv填写drbd配置文件中的disk既可。**（这里不明白，用户看了估计也是一头雾水）
+上述命令中，挂载点为/dev/pbxvg/pbxlv，128G分区大小，需要根据您的实际情况更改
 
 
 
@@ -110,14 +112,12 @@ scp ./global_common.conf  pbx03:/etc/drbd.d/
 
 
 配置 DRBD，修改当前目录下pbxdata.res文件：
-
 ```
 resource pbxdata {
 
 meta-disk internal;
 device /dev/drbd1;
-#disk /dev/pbxvg/pbxlv;
-disk 你的硬盘或者分区;
+disk /dev/pbxvg/pbxlv;
 
 syncer {
   verify-alg sha1;
@@ -156,14 +156,11 @@ connection-mesh {
 }
 ```
 
-需要注意的是，如果每台机器的分区不一样，需要拷贝之前修改 disk 字段注明pbx01ip、pbx02ip、pbx03ip需要修改成真实的 IP。（**这里无法理解**）
-
 拷贝到本机
 
 ```
 cp -f pbxdata.res /etc/drbd.d/
 ```
-
 拷贝到pbx02
 
 ```
@@ -214,18 +211,19 @@ drbdadm secondary pbxdata
 ## 配置 PBX
 如下命令中，其中pbx02， pbx03 分别是node2和node3。
 其中123456是PortSIP 数据库密码, 您也可以设置使用其他密码.
-66.175.222.20是PBX 运行容器运行的 IP地址，如果运行在公网，那么此处需要指定公网IP，如果是内网，则指定内网IP, 在本例中，使用的 IP 是66.175.222.20, 你需要根据实际情况来修改该 IP.  (**这个IP是否就是虚拟IP？)**
+66.175.222.20是PBX 运行容器运行的 IP地址，如果运行在公网，那么此处需要指定公网IP，如果是内网，则指定内网IP, 在本例中，使用的 IP 是66.175.222.20, 你需要根据实际情况来修改该 IP. 66.175.222.20
 如果因为拉镜像导致执行失败，当前步骤可以多次执行，直到成功。
 
 ```json
-./docker.sh pbx02 pbx03 66.175.222.20 123456 portsip/pbx:12
+yourvip替换成你的高可用虚拟ip（随机选择一个内网中没有被使用的即可）
+./docker.sh pbx02 pbx03 yourvip 123456 portsip/pbx:12
 ```
 ## 创建资源
 在master上操作，如果不报错证明，安装成功。可通过 ./bin/pbx-status查看状态
 ```
+yourvip替换成你的高可用虚拟ip（随机选择一个内网中没有被使用的即可）
 ./create_pacemaker_resources.sh  pbx02 pbx03  yourvip
 ```
-**(还缺少在哪里配置VIP的操作说明。)**
 
 
 
