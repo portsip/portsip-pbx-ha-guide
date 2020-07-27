@@ -119,7 +119,9 @@ scp  pbxdata.res pbx03:/etc/drbd.d/
 systemctl start drbd
 所有节点执行 
 drbdadm create-md pbxdata
-drbdadm down pbxdata && drbdadm up pbxdata
+drbdadm up pbxdata
+如果报错先执行drbdadm down pbxdata，然后再执行drbdadm up pbxdata
+
 只在一台节点执行
 drbdadm -- --clear-bitmap new-current-uuid pbxdata
 drbdadm primary --force pbxdata
