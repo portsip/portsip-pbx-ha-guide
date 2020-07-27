@@ -1,10 +1,10 @@
 # Deploy PortSIP PBX as HA mode
 ## Prerequisites
-> 1、Starting with a minimum of three PBX nodes
+> 1、Must starting with a minimum of three PBX nodes
 
 >2、Must resolve three PBX  nodes host name to the IP, each host should can be ping from other nodes. In this guide, we assuming the nodes IP is 192.168.1.11, 192.168.1.12, 192.168.1.13 and the host name is pbx01, pbx02, pbx03。
 
->3、Each node need a new disk or a new disk partition , no formatting required. The disk or disk partition size should be same, don't put any files into the disk / disk partition.
+>3、Each node needs a new disk or a new disk partition , no formatting required. The disk or disk partition size should be same, don't put any files into the disk / disk partition.
 ## Resolve to the host name
 Perform command on each node. **Note: you must replace the IP and host name by your IP and host name**
 ```
@@ -25,19 +25,19 @@ Perform below commands on pbx 01, enter necessary information according the prom
 [root@pbx01 ~]# ssh-keygen -t rsa 
 ```
 
-Setup password less SSH login on for pbx02：
+Setup passwordless SSH login on for pbx02：
 
 ```
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx02
 ```
 
-Setup password less SSH login on for pbx03：
+Setup passwordless SSH login for pbx03：
 
 ```
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx03
 ```
 
-Test password less SSH login on pbx02:
+Test passwordless SSH login for pbx02:
 
 ```
 [root@pbx01 ~]# ssh pbx02 "w"
@@ -61,7 +61,7 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 ## Install pacemaker and drbd automatically
 
-Let us make the pbx01 as master, and perform below commands:
+Let us make the pbx01 as master, and perform below commands on it:
 
 ```
 yum -y install git
@@ -69,7 +69,7 @@ git clone https://github.com/portsip/portsip-pbx-ha-guide.git
 cd  portsip-pbx-ha-guide
 ```
 
-Now perform pacemaker.sh，waiting for the installation completed then enter the username and password as prompt:
+Now perform **pacemaker.sh**，waiting for the installation completed then enter the username and password as prompt:
 
 ```
 ./pacemaker.sh pbx02 pbx03
@@ -86,13 +86,13 @@ reboot
 
 
 ## Configure the Linux lvm
-Perform below command  on each pbx node to show the disk name or disk partition name and note them:
+Perform below command  on each pbx node to show the disk name or disk partition name, note them:
 
 ```
 fdisk -l
 ```
 
-Perform below command on each PBX node (**You should replace the diskname by your real disk name or disk partition name** ):
+Perform below commands on each PBX node (**You should replace the diskname by your real disk name or disk partition name** ):
 
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -101,12 +101,12 @@ vgcreate pbxvg diskname
 lvcreate -n pbxlv -L 128G pbxvg
 ```
 
-In above commands, the mount point is /dev/pbxvg/pbxlv ( **don't change it**), and disk / disk partition is 128G, **you should change the size to your disk / disk partition size.**
+In above commands, the mount point is /dev/pbxvg/pbxlv ( **don't change it**), and disk / disk partition size is 128G, **you should change the size to your disk / disk partition actually size.**
 
 
 
 ## Configure DRBD
-Just need to modify the DRBD configure file then send to other nodes.
+Just need to modify the DRBD configure on master node (in case is the pbx 01) file then send to other nodes.
 
 Send the global configure file to other nodes:
 
@@ -217,13 +217,13 @@ drbdadm secondary pbxdata
 
 
 ## Configure PBX
-When configure the PBX as HA mode, we will need a virtual IP for access the PBX cluster, this virtual IP mustn't used by others.
+When configure the PBX as HA mode, we will need a virtual IP for access the PBX cluster, this virtual IP mustn't be used by others.
 
-In below commands, **we assuming we use 192.168.1.10 for virtual IP.**
+In below commands, **we assume use 192.168.1.10 for virtual IP.**
 
 The 123456 is he PBX DB password, the pbx02 and pbx03 is the host name of node1, node2.
 
-If you get failed in this step, you can repeat below command until success.
+If you get failed in this step, you can repeat below command until succeeded.
 
 ```json
 ./docker.sh pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
@@ -251,11 +251,13 @@ You can use **./bin/pbx-status** to view the status.
 ./bin/pbx-restart
 ```
 ## Update pbx
-In case the pbx02 is node2, pbx 03 is node3
+In case the pbx02 is node2, pbx 03 is node3.
 The 123456 is password for PortSIP PBX DB, you can use other words as your password.
-The portsip/pbx:12 is the new version which need update to.
+The **portsip/pbx:12** is the new version which need update to.
 
 If you get failed in this step, you can repeat below command until success.
+
+Perform below command on pbx01:
 
 ```
 ./bin/pbx-update pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
