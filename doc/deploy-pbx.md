@@ -80,23 +80,24 @@ net {
   after-sb-1pri discard-secondary;
   after-sb-2pri disconnect;
 }
-
+#节点一名字和ip
 on ptest01 {
   address ptest01ip:7789;
   node-id 0;
 }
-
+#节点二名字和ip
 on ptest02 {
   address ptest02ip:7789;
   node-id 1;
 }
-
+#节点三名字和ip
 on ptest03 {
   address ptest03ip:7789;
   node-id 2;
 }
 
 connection-mesh {
+  #节点1、2、3名字
   hosts ptest01 ptest02 ptest03;
   net {
       use-rle no;
