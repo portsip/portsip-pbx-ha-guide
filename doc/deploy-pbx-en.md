@@ -19,7 +19,7 @@ EOF
 
 We assuming the host name pbx01, pbx02、pbx03 is the node 1, node 2, node 3.
 
-Perform below commands on pbx 01, enter necessary information according the prompts：
+Perform below commands on pbx01, enter necessary information according the prompts：
 
 ```
 [root@pbx01 ~]# ssh-keygen -t rsa 
@@ -106,7 +106,7 @@ In above commands, the mount point is /dev/pbxvg/pbxlv ( **don't change it**), a
 
 
 ## Configure DRBD
-Just need to modify the DRBD configure on master node (in case is the pbx 01) file then send to other nodes.
+Just need to modify the DRBD configure on master node (in case is the pbx01) file then send to other nodes.
 
 Send the global configure file to other nodes:
 
@@ -204,7 +204,7 @@ drbdadm create-md pbxdata
 drbdadm up pbxdata
 ```
 
-Perform below command **only on one of the nodes:**
+Perform below command **only on master,  i.e. pbx01:**
 
 ```
 drbdadm -- --clear-bitmap new-current-uuid pbxdata
@@ -231,6 +231,8 @@ If you get failed in this step, you can repeat below command until succeeded.
 ## Create resources
 Perform below commands on master node(In case is the pbx01)，If there no error appears then you successfully configured the PortSIP PBX HA。
 
+The 192.168.1.10 is the virtual IP you used.
+
 You can use **./bin/pbx-status** to view the status.
 
 ```
@@ -254,6 +256,8 @@ You can use **./bin/pbx-status** to view the status.
 In case the pbx02 is node2, pbx 03 is node3.
 The 123456 is password for PortSIP PBX DB, you can use other words as your password.
 The **portsip/pbx:12** is the new version which need update to.
+
+The 192.168.1.10 is the virtual IP you used.
 
 If you get failed in this step, you can repeat below command until success.
 
