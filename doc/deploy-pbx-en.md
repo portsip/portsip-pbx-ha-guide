@@ -237,24 +237,24 @@ drbdadm secondary pbxdata
 ## Configure PBX
 When configure the PBX as HA mode, we will need a virtual IP for access the PBX cluster, this virtual IP mustn't be used by others.
 
-In below commands, **we assume use 192.168.1.10 for virtual IP.**
+In below commands, **we assume use 192.168.1.100 for virtual IP.**
 
 The 123456 is he PBX DB password, the pbx02 and pbx03 is the host name of node1, node2.
 
 If you get failed in this step, you can repeat below command until succeeded.
 
 ```json
-./docker.sh pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
+./docker.sh pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
 ```
 ## Create resources
 Perform below commands on master node(In case is the pbx01)，If there no error appears then you successfully configured the PortSIP PBX HA。
 
-The 192.168.1.10 is the virtual IP you used.
+The 192.168.1.100 is the virtual IP you used.
 
 You can use **./bin/pbx-status** to view the status.
 
 ```
-./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.10
+./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
 ```
 
 
@@ -275,12 +275,12 @@ In case the pbx02 is node2, pbx 03 is node3.
 The 123456 is password for PortSIP PBX DB, you can use other words as your password.
 The **portsip/pbx:12** is the new version which need update to.
 
-The 192.168.1.10 is the virtual IP you used.
+The 192.168.1.100 is the virtual IP you used.
 
 If you get failed in this step, you can repeat below command until success.
 
 Perform below command on pbx01:
 
 ```
-./bin/pbx-update pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
+./bin/pbx-update pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
 ```
