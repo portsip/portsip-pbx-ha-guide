@@ -1,4 +1,23 @@
 # Deploy PortSIP PBX as HA mode
+===
+
+- [Architecture diagram](#Architecturediagram)
+- [Prerequisites](#Prerequisites)
+- [Resolve to the host name](#Resolve-to-the-host-name)
+- [Setup passwordless SSH login](#Setup-passwordless-SSH-login)
+- [Install pacemaker and drbd automatically](#Install-pacemaker-and-drbd-automatically)
+- [Configure the Linux lvm](#Configure-the-Linux-lvm)
+- [Configure DRBD](#Configure-DRBD)
+- [Initialize the DRBD](#Initialize-the-DRBD)
+- [Configure PBX](#Configure-PBX)
+- [Create resources](#Create-resources)
+- [Frequently used commands](#Frequently-used-commands)
+  - [Check PBX status](#Check-PBX-status)
+  - [Restart pbx](#Restart-pbx)
+  - [Update pbx](#Update-pbx)
+
+## Architecture diagram
+![pbx](pbx.png)
 ## Prerequisites
 > 1、Must starting with a minimum of three PBX nodes
 
@@ -266,5 +285,3 @@ Perform below command on pbx01:
 ```
 ./bin/pbx-update pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
 ```
-## Architecture diagram
-![](./pbx.png "pbx.png")
