@@ -236,23 +236,23 @@ drbdadm secondary pbxdata
 ```
 
 # 配置 PBX
-部署 PortSIP PBX 为 HA 模式的时候，我们需要一个 Virtual IP 来用代表 PBX 让外部访问，这个 Virtual IP 必须没有被其他的机器所使用，本例中我们使用 **192.168.1.10** 作为 Virtual IP。在实际部署场景中，您需要根据您的网络情况来选中一个合适的 IP 作为 Virtual IP。
+部署 PortSIP PBX 为 HA 模式的时候，我们需要一个 Virtual IP 来用代表 PBX 让外部访问，这个 Virtual IP 必须没有被其他的机器所使用，本例中我们使用 **192.168.1.100** 作为 Virtual IP。在实际部署场景中，您需要根据您的网络情况来选中一个合适的 IP 作为 Virtual IP。
 
 如下命令中，pbx02， pbx03 分别是node2和node3。
 其中123456是PortSIP 数据库密码, 您也可以设置使用其他密码.
 如果因为拉镜像导致执行失败，当前步骤可以多次执行，直到成功。
 
 ```json
-./docker.sh pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
+./docker.sh pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
 ```
 
 # 创建资源
 在master 也就是 pbx01上执行如下操作，如果不报错证明安装成功。可通过 ./bin/pbx-status查看状态。
 
-命令中的 192.168.1.10 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
+命令中的 192.168.1.100 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
 
 ```
-./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.10
+./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
 ```
 
 
@@ -274,9 +274,9 @@ drbdadm secondary pbxdata
 其中 **portsip/pbx:12** 是要更新的版本，你可以自由地使用其他版本。
 
 如果因为拉镜像导致执行失败，本步骤可以多次执行直到成功。
-命令中的 192.168.1.10 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
+命令中的 192.168.1.100 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
 
 ```
-./bin/pbx-update pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
+./bin/pbx-update pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
 ```
 
