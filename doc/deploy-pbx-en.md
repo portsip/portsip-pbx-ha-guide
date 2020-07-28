@@ -266,3 +266,5 @@ Perform below command on pbx01:
 ```
 ./bin/pbx-update pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
 ```
+## Architecture diagram
+![](./pbx.png "pbx.png")
