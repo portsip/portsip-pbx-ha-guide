@@ -1,11 +1,36 @@
-# 自动化安装pbx高可用
-## 需要满足以下条件
+自动化安装pbx高可用
+===
+
+- [自动化安装pbx高可用](#自动化安装pbx高可用)
+- [架构图](#架构图)
+- [先决条件](#先决条件)
+- [设置host解析](#设置host解析)
+- [设置免密码登录](#设置免密码登录)
+- [自动安装pacemaker 和drbd](#自动安装pacemaker-和drbd)
+- [配置 Linux lvm](#配置-linux-lvm)
+- [配置 DRBD](#配置-drbd)
+- [初始化DRBD](#初始化drbd)
+- [配置 PBX](#配置-pbx)
+- [创建资源](#创建资源)
+- [几个常用的命令](#几个常用的命令)
+  - [查看pbx状态](#查看pbx状态)
+  - [重启pbx](#重启pbx)
+  - [更新pbx](#更新pbx)
+
+
+# 架构图
+
+![pbx](pbx.png )
+
+# 先决条件
+
 > 1、最少3台节点
 
 >2、必须设置每个节点的主机名 host 解析，要求必须能够 ping 通任一节点的主机名。 本文档以 192.168.1.11, 192.168.1.12, 192.168.1.13为例，假定他们的主机名分别为 pbx01, pbx02, pbx03。
 
 >3、3台节点各需一块新硬盘，无需分区格式化操作，要求三个节点的新硬盘大小一致。或者每个节点各需一个新分区，新分区无需格式化操作，要求三个节点的新分区大小一致。新硬盘或者新分区里面不能有文件存在。
-## 设置host解析
+
+# 设置host解析
 在每一个节点执行如下命令。**注意：需要把下面的命令里的 IP 和主机名替换成你的主机名和 IP**
 ```
 cat <<EOF >>/etc/hosts
@@ -14,7 +39,8 @@ cat <<EOF >>/etc/hosts
 192.168.1.13 pbx03
 EOF
 ```
-## 设置免密码登录
+
+# 设置免密码登录
 本例中，pbx01, pbx02、pbx03分别是节点1、节点2和节点3。
 本例在节点 pbx01 上执行如下命令，并按照提示生成证书：
 
@@ -56,7 +82,7 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 
 
-## 自动安装pacemaker 和drbd
+# 自动安装pacemaker 和drbd
 
 在master上操作： **3台节点中随机选择一台当做master, 本例中，我们用 pbx01做master**,
 
@@ -82,7 +108,7 @@ reboot
 ```
 
 
-## 配置 Linux lvm
+# 配置 Linux lvm
 在每一节点上分别执行如下命令查看 HA 要使用的硬盘名或者分区名，并记录下来：
 
 ```
@@ -102,7 +128,7 @@ lvcreate -n pbxlv -L 128G pbxvg
 
 
 
-## 配置DRBD
+# 配置 DRBD
 以下操作只需在 master 节点上进行，本例中位 pbx01。
 
 在 master 上 修改 DRBD 的配置文件然后使用 scp 分发到各节点。
@@ -114,8 +140,6 @@ cp -f  ./global_common.conf /etc/drbd.d/
 scp ./global_common.conf  pbx02:/etc/drbd.d/
 scp ./global_common.conf  pbx03:/etc/drbd.d/
 ```
-
-
 
 接着在 master 上配置 DRBD，修改当前目录下pbxdata.res文件：
 ```
@@ -181,7 +205,7 @@ scp  pbxdata.res pbx03:/etc/drbd.d/
 
 
 
-### 初始化DRBD
+# 初始化DRBD
 
 在每个节点上都执行如下命令启动DRBD：
 
@@ -211,10 +235,7 @@ mkfs.xfs /dev/drbd1
 drbdadm secondary pbxdata
 ```
 
-
-
-
-## 配置 PBX
+# 配置 PBX
 部署 PortSIP PBX 为 HA 模式的时候，我们需要一个 Virtual IP 来用代表 PBX 让外部访问，这个 Virtual IP 必须没有被其他的机器所使用，本例中我们使用 **192.168.1.10** 作为 Virtual IP。在实际部署场景中，您需要根据您的网络情况来选中一个合适的 IP 作为 Virtual IP。
 
 如下命令中，pbx02， pbx03 分别是node2和node3。
@@ -224,7 +245,8 @@ drbdadm secondary pbxdata
 ```json
 ./docker.sh pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
 ```
-## 创建资源
+
+# 创建资源
 在master 也就是 pbx01上执行如下操作，如果不报错证明安装成功。可通过 ./bin/pbx-status查看状态。
 
 命令中的 192.168.1.10 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
@@ -257,5 +279,4 @@ drbdadm secondary pbxdata
 ```
 ./bin/pbx-update pbx02 pbx03 192.168.1.10 123456 portsip/pbx:12
 ```
-## 架构图
-![](./pbx.png "pbx.png")
+
