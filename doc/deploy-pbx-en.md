@@ -1,5 +1,4 @@
 # Deploy PortSIP PBX as HA mode
-===
 
 - [Architecture diagram](#Architecturediagram)
 - [Prerequisites](#Prerequisites)
