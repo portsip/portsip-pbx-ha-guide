@@ -268,6 +268,8 @@ You can use **./bin/pbx-status** to view the status.
 ./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
 ```
 
+Now you can use your browser to open the URL http://192.168.1.100:8888 or https://192.168.1.100:8887 to configure your PBX.
+
 
 
 # Frequently used commands

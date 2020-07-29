@@ -263,6 +263,8 @@ drbdadm secondary pbxdata
 ./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
 ```
 
+现在您可以使用浏览器打开 http://192.168.1.100:8888 或者  https://192.168.1.100:8887 来配置您的 PBX。
+
 
 
 # 几个常用的命令
