@@ -1,6 +1,6 @@
 # Deploy PortSIP PBX as HA mode
 
-- [Architecture diagram](#Architecturediagram)
+- [Architecture diagram](#Architecture-diagram)
 - [Prerequisites](#Prerequisites)
 - [Resolve to the host name](#Resolve-to-the-host-name)
 - [Setup passwordless SSH login](#Setup-passwordless-SSH-login)
