@@ -1,5 +1,4 @@
 # 自动化安装 PortSIP PBX 高可用
-===
 
 - [自动化安装 PortSIP PBX 高可用](#自动化安装-PortSIP-PBX-高可用)
 - [架构图](#架构图)
