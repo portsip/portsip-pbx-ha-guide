@@ -15,7 +15,18 @@
   - [Restart pbx](#Restart-pbx)
   - [Update pbx](#Update-pbx)
 
+
+
+PortSIP  PBX supports deploy as the HA mode, typically deploy with three servers(Physical machine or Virtual machine). When one of the PBX servers is down, the registrations and calls on this PBX server will be restored on another server automatically.
+
+With the HA mode, the PBX uses a virtual IP to provide the service to client, the client app / IP Phone register to the PBX and make call with the PBX by this virtual IP.
+
+------
+
+
+
 ## Architecture diagram
+
 ![pbx](pbx.png)
 ## Prerequisites
 > 1、Must starting with a minimum of three PBX nodes
