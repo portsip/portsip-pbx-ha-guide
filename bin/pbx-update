@@ -1,6 +1,8 @@
 #!/bin/bash
+pcs resource disable pbx
 docker rm -f pbx >>/dev/null 2>&1
 ssh $1 "docker rm -f pbx >>/dev/null 2>&1"
 ssh $2 "docker rm -f pbx >>/dev/null 2>&1"
 /bin/bash ./docker.sh $1 $2 $3 $4 $5
- 
+pcs resource enable pbx
+pcs resource cleanup
