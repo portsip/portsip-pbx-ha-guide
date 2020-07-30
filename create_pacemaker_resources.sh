@@ -9,7 +9,7 @@ cp -f ./pbx /usr/lib/ocf/resource.d/portsip/
 chmod +x /usr/lib/ocf/resource.d/portsip/pbx
 ssh $1 "chmod +x /usr/lib/ocf/resource.d/portsip/pbx"
 ssh $2 "chmod +x /usr/lib/ocf/resource.d/portsip/pbx"
-##初始化的时候先删除资源，避免脚本无法重复执行
+##init
 pcs  resource delete drbd_devpath_master >/dev/null 2>&1
 pcs resource delete vip >/dev/null 2>&1
 pcs resource delete src_pkt_ip  >/dev/null 2>&1
