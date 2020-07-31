@@ -29,9 +29,9 @@ With the HA mode, the PBX uses a virtual IP to provide the service to client, th
 ## Prerequisites
 > 1、Must starting with a minimum of three PBX nodes
 
-> 2、The OS should be: CentOS 7.6, 64 bit; Ubuntu 18.04, 64bit; Debian 9.8, 64bit
+> 2、The OS should be: CentOS 7.6, 64 bit.
 
->3、Must resolve three PBX  nodes host name to the IP, each host should can be ping from other nodes. In this guide, we assuming the nodes IP is 192.168.1.11, 192.168.1.12, 192.168.1.13 and the host name is pbx01, pbx02, pbx03。
+>3、Must resolve three PBX  nodes host name to the IP, each host should can be ping from other nodes. In this guide, we assuming the nodes IP is 192.168.1.11, 192.168.1.12, 192.168.1.13 and the host name is pbx01, pbx02, pbx03.
 
 >4、Each node needs a new disk or a new disk partition , no formatting required. The disk or disk partition size should be same, don't put any files into the disk / disk partition.
 ## Resolve to the host name
