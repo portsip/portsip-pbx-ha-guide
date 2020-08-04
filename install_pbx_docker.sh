@@ -1,4 +1,16 @@
 #!/bin/bash
+system_check(){
+        if [  -f "/etc/redhat-release" ];then
+        Install_docker_on_centos
+        elif [ -f "/etc/lsb-release"];then
+        Install_docker_on_ubuntu
+        elif [ -f "/etc/debian_version"];then
+        Install_docker_on_debian
+        else
+           echo "Unknown operating system"
+           exit
+        fi
+}
 set_ufw(){
 sudo systemctl enable ufw
 sudo  systemctl start ufw
@@ -49,17 +61,6 @@ sudo systemctl enable docker
 sudo systemctl start docker
 set_ufw
 }
-system_check(){
-        if [  -f "/etc/redhat-release" ];then
-        Install_docker_on_centos
-        elif [ -f "/etc/lsb-release"];then
-        Install_docker_on_ubuntu
-        elif [ -f "/etc/debian_version"];then
-        Install_docker_on_debian
-        else
-           echo "Unknown operating system"
-           exit
-        fi
-}
+
 
 system_check
