@@ -3,22 +3,22 @@
 - [自动化安装 PortSIP PBX 高可用](#自动化安装-PortSIP-PBX-高可用)
 - [架构图](#架构图)
 - [先决条件](#先决条件)
-- [设置host解析](#设置host解析)
+- [设置 host 解析](#设置host解析)
 - [设置免密码登录](#设置免密码登录)
-- [自动安装pacemaker 和drbd](#自动安装pacemaker-和drbd)
+- [自动安装 pacemaker 和 drbd](#自动安装-pacemaker-和-drbd)
 - [配置 Linux lvm](#配置-linux-lvm)
 - [配置 DRBD](#配置-drbd)
-- [初始化DRBD](#初始化drbd)
+- [初始化 DRBD](#初始化-drbd)
 - [配置 PBX](#配置-pbx)
 - [创建资源](#创建资源)
 - [几个常用的命令](#几个常用的命令)
-  - [查看pbx状态](#查看pbx状态)
-  - [重启pbx](#重启pbx)
-  - [更新pbx](#更新pbx)
+  - [查看 PBX 状态](#查看-pbx-状态)
+  - [重启 PBX](#重启-pbx)
+  - [更新 PBX](#更新-pbx)
 
 
 
-PortSIP  PBX 支持部署为 HA 模式, 通常将其部署在三台 PBX 服务器上（可以是物理机或者虚拟机）。当其中一台 PBX 服务器崩溃或者出现故障后，另外两台中的一台即自动接替工作，并将之前已经注册的客户端和已经建立的通话信息进行恢复。 
+PortSIP  PBX 支持部署为 HA 模式, 通常将其部署在三台 PBX 服务器上（可以是物理机或者虚拟机）。其中一台 PBX 服务器崩溃或者出现故障后，另外两台中的一台即自动接替工作，并将之前已经注册的客户端和已经建立的通话信息进行恢复。 
 
 在 HA 模式下，PBX 在虚拟 IP 上为客户端提供服务，所有的客户端 APP 或者 IP Phone, 都将通过这个虚拟 IP来和 PBX 通信。
 
@@ -30,15 +30,15 @@ PortSIP  PBX 支持部署为 HA 模式, 通常将其部署在三台 PBX 服务�
 
 # 先决条件
 
-> 1、最少3台节点
+> 1. 至少 3 台节点
 >
-> 2、操作系统：CentOS 7.6，须是 64 位系统。
+> 2. 操作系统：CentOS 7.6，须是 64 位系统。
 
->3、必须设置每个节点的主机名 host 解析，要求必须能够 ping 通任一节点的主机名。 本文档以 192.168.1.11, 192.168.1.12, 192.168.1.13为例，假定他们的主机名分别为 pbx01, pbx02, pbx03。
+>3. 必须设置每个节点的主机名 host 解析，要求必须能够 ping 通任一节点的主机名。 本文档以 192.168.1.11, 192.168.1.12, 192.168.1.13为例，假定他们的主机名分别为 pbx01, pbx02, pbx03。
 
->4、3台节点各需一块新硬盘，无需分区格式化操作，要求三个节点的新硬盘大小一致。或者每个节点各需一个新分区，新分区无需格式化操作，要求三个节点的新分区大小一致。新硬盘或者新分区里面不能有文件存在。
+>4. 3 台节点各需一块新硬盘，无需分区格式化操作，要求三个节点的新硬盘大小一致。或者每个节点各需一个新分区，新分区无需格式化操作，要求三个节点的新分区大小一致。新硬盘或者新分区里面不能有文件存在。
 
-# 设置host解析
+# 设置 host 解析
 在每一个节点执行如下命令。**注意：需要把下面的命令里的 IP 和主机名替换成你的主机名和 IP**
 ```
 cat <<EOF >>/etc/hosts
@@ -90,9 +90,9 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 
 
-# 自动安装pacemaker 和drbd
+# 自动安装 pacemaker 和 drbd
 
-在master上操作： **3台节点中随机选择一台当做master, 本例中，我们用 pbx01做master**,
+在 master 上操作：3 台节点中随机选择一台当做 master。本例中，我们用 pbx01做 master**：
 
 ```
 yum -y install git
@@ -137,9 +137,9 @@ lvcreate -n pbxlv -L 128G pbxvg
 
 
 # 配置 DRBD
-以下操作只需在 master 节点上进行，本例中位 pbx01。
+以下操作只需在 master 节点上进行，本例中为 pbx01。
 
-在 master 上 修改 DRBD 的配置文件然后使用 scp 分发到各节点。
+在 master 上修改 DRBD 的配置文件然后使用 scp 分发到各节点。
 
 发送全局配置文件到各节点:
 
@@ -149,7 +149,7 @@ scp ./global_common.conf  pbx02:/etc/drbd.d/
 scp ./global_common.conf  pbx03:/etc/drbd.d/
 ```
 
-接着在 master 上配置 DRBD，修改当前目录下pbxdata.res文件：
+接着在 master 上配置 DRBD，修改当前目录下 pbxdata.res 文件：
 ```
 resource pbxdata {
 
@@ -199,13 +199,13 @@ connection-mesh {
 ```
 cp -f pbxdata.res /etc/drbd.d/
 ```
-拷贝到pbx02
+拷贝到 pbx02
 
 ```
 scp  pbxdata.res pbx02:/etc/drbd.d/
 ```
 
-拷贝到pbx03
+拷贝到 pbx03
 
 ```
 scp  pbxdata.res pbx03:/etc/drbd.d/
@@ -213,9 +213,9 @@ scp  pbxdata.res pbx03:/etc/drbd.d/
 
 
 
-# 初始化DRBD
+# 初始化 DRBD
 
-在每个节点上都执行如下命令启动DRBD：
+在每个节点上都执行如下命令启动 DRBD：
 
 ```
 systemctl start drbd
@@ -246,7 +246,7 @@ drbdadm secondary pbxdata
 # 配置 PBX
 部署 PortSIP PBX 为 HA 模式的时候，我们需要一个 Virtual IP 来用代表 PBX 让外部访问，这个 Virtual IP 必须没有被其他的机器所使用，本例中我们使用 **192.168.1.100** 作为 Virtual IP。在实际部署场景中，您需要根据您的网络情况来选中一个合适的 IP 作为 Virtual IP。
 
-如下命令中，pbx02， pbx03 分别是node2和node3。
+如下命令中，pbx02、pbx03 分别是 node2 和 node3。
 其中123456是PortSIP 数据库密码, 您也可以设置使用其他密码.
 如果因为拉镜像导致执行失败，当前步骤可以多次执行，直到成功。
 
@@ -279,9 +279,9 @@ drbdadm secondary pbxdata
 ./bin/pbx-restart
 ```
 ## 更新pbx
-本例其中pbx02 pbx03 分别是node2和node3
-其中**123456**是PortSIP 数据库密码,  您也可以设置使用其他密码.
-其中 **portsip/pbx:12** 是要更新的版本，你可以自由地使用其他版本。
+本例中的 pbx02、pbx03 分别是 node2 和 node3。
+其中 **123456** 是 PortSIP 数据库密码,  您也可以设置使用其他密码。
+其中 **portsip/pbx:12** 是要更新的版本，您可以自由地使用其他版本。
 
 如果因为拉镜像导致执行失败，本步骤可以多次执行直到成功。
 命令中的 192.168.1.100 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
