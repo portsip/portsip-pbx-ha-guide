@@ -231,7 +231,6 @@ systemctl status drbd
 
 ```
 drbdadm create-md pbxdata
-drbdadm up pbxdata
 ```
 
 只需 **master** 也就是 **pbx01** 上执行如下命令:
