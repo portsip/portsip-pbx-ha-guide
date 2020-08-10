@@ -37,9 +37,9 @@ set_pacemaker_user(){
      	ssh $2 "mkdir -p /usr/lib/heartbeat/ && rm -rf /usr/lib/heartbeat/* && cp -f /usr/lib/ocf/lib/heartbeat/* /usr/lib/heartbeat/"
 }
 install_drbd(){
-	rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd
-        ssh $1 "rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd"
-        ssh $2 "rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org ; rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm ; yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd"
+	yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd
+        ssh $1 "yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd"
+        ssh $2 "yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd"
 	echo "drbd" >/etc/modules-load.d/drbd.conf;echo "drbd_transport_tcp" >>/etc/modules-load.d/drbd.conf
 	ssh $1 "echo "drbd" >/etc/modules-load.d/drbd.conf;echo "drbd_transport_tcp" >>/etc/modules-load.d/drbd.conf"
         ssh $2 "echo "drbd" >/etc/modules-load.d/drbd.conf;echo "drbd_transport_tcp" >>/etc/modules-load.d/drbd.conf"
@@ -48,21 +48,12 @@ install_drbd(){
         ssh $2 "mkdir -p /var/lib/pbx"
 }
 install_docker(){
-  sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-  sudo yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-  sudo yum makecache fast
   sudo yum -y install docker-ce
   systemctl start docker
   systemctl enable docker
-  ssh $1 "yum install -y yum-utils device-mapper-persistent-data lvm2"
-  ssh $1 "yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo"
-  ssh $1 "yum makecache fast"
   ssh $1 "yum -y install docker-ce"
   ssh $1 "systemctl start docker"
   ssh $1 "systemctl enable docker"
-  ssh $2 "yum install -y yum-utils device-mapper-persistent-data lvm2"
-  ssh $2 "yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo"
-  ssh $2 "yum makecache fast"
   ssh $2 "yum -y install docker-ce"
   ssh $2 "systemctl start docker"
   ssh $2 "systemctl enable docker"
