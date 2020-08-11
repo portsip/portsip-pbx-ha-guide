@@ -98,10 +98,10 @@ git clone https://github.com/portsip/portsip-pbx-ha-guide.git
 cd  portsip-pbx-ha-guide
 ```
 
-Now execute **pacemaker.sh**. Once the installation completes, enter the username and password as prompted:
+Now execute **install.sh**. Once the installation completes, enter the username and password as prompted:
 
 ```
-./pacemaker.sh pbx02 pbx03
+./install.sh pbx02 pbx03
 Username: hacluster
 Password: 
 ```
