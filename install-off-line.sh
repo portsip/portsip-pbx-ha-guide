@@ -2,6 +2,10 @@
 init(){
     sed -i 's#keepcache=0#keepcache=1#g' /etc/yum.conf
     rm -rf /var/cache/yum && tar xf yum.tar.gz && mv yum /var/cache/
+    if [ $? -ne 0 ];then
+    echo "init error "
+    exit 1
+    fi
     systemctl stop firewalld.service
 	systemctl disable firewalld.service
 	setenforce 0
@@ -14,23 +18,56 @@ install_pacemaker(){
       systemctl enable pcsd
 }
 
-install_drbd()){
-    rpm --import RPM-GPG-KEY-elrepo.org
-    rpm -Uvh elrepo-release-7.0-4.el7.elrepo.noarch.rpm
-    yum install -y kmod-drbd90 drbd90-utils;systemctl start drbd
+install_drbd(){
+    rpm --import ./RPM-GPG-KEY-elrepo.org
+    rpm -Uvh elrepo-release-7.el7.elrepo.noarch.rpm
+     if [ $? -ne 0 ];then
+    echo "import rpm error"
+    exit 1
+    fi
+    yum install -y kmod-drbd90 drbd90-utils
 }
 install_docker(){
-    echo '解压tar包...'
-    tar -xf docker.tar.gx
-    cp ./* /usr/bin/
-    cp docker.service /etc/systemd/system/
+    tar -xf docker.tar.gz
+    cp ./docker/* /usr/bin/
+    cp ./docker/docker.service /etc/systemd/system/
     chmod +x /etc/systemd/system/docker.service
     systemctl daemon-reload
     systemctl start docker
     systemctl enable docker.service
     docker -v
+    if [ $? -ne 0 ];then
+    echo "install docker error"
+    exit 1
+    fi
 }
 import_docker_image(){
     tar xf pbx.tar.gz.gz
     docker load < pbx.tar.gz
+    if [ $? -ne 0 ];then
+    echo "import error"
+    fi
 }
+
+init
+if [ $? -ne 0 ];then
+exit 1
+fi
+
+
+install_pacemaker
+if [ $? -ne 0 ];then
+exit 1
+fi
+install_drbd
+if [ $? -ne 0 ];then
+exit 1
+fi
+install_docker
+if [ $? -ne 0 ];then
+exit 1
+fi
+import_docker_image
+if [ $? -ne 0 ];then
+exit 1
+fi
