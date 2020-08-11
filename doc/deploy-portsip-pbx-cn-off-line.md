@@ -1,4 +1,4 @@
-# 准备离线资源
+# 准备离线资源(所有节点)
 **上传git资源包，通过git下载并解压**
 
 ```
@@ -11,14 +11,17 @@ docker.tar.gz
 
 elrepo-release-7.el7.elrepo.noarch.rpm
 
-install-off-line.sh
 
 pbx.tar.gz.gz
 
 RPM-GPG-KEY-elrepo.org
 
 yum.tar.gz
+
+# 执行portsip-pbx-ha-guide目录下的install-off-line.sh
+/bin/bash install-off-line.sh
 ```
+
 # 设置免密码登录
 本例中，pbx01, pbx02、pbx03分别是节点1、节点2和节点3。
 本例在节点 pbx01 上执行如下命令，并按照提示生成证书：
