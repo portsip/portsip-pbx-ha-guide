@@ -1,6 +1,10 @@
 # 准备离线资源
 **上传git资源包，通过git下载并解压**
+
+```
 portsip-pbx-ha-guide
+```
+
 **注意需要把下面文件上传到portsip-pbx-ha-guide目录中**
 ```
 docker.tar.gz
