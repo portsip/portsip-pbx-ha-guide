@@ -67,7 +67,13 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 /bin/bash init-pacemaker.sh pbx02 pbx03
 
+# 重启所有节点
 
+```
+ssh pbx02 "reboot"
+ssh pbx03 "reboot"
+reboot
+```
 # 配置 Linux lvm
 在每一节点上分别执行如下命令查看 HA 要使用的硬盘名或者分区名，并记录下来：
 
