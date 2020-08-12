@@ -111,47 +111,9 @@ scp ./global_common.conf  pbx03:/etc/drbd.d/
 
 接着在 master 上配置 DRBD，修改当前目录下 pbxdata.res 文件：
 ```
-resource pbxdata {
-
-meta-disk internal;
-device /dev/drbd1;
-disk /dev/pbxvg/pbxlv;
-
-syncer {
-  verify-alg sha1;
-}
-
-net {
-# allow-two-primaries no;
-  after-sb-0pri discard-zero-changes;
-  after-sb-1pri discard-secondary;
-  after-sb-2pri disconnect;
-}
-#节点一名字和ip
-on pbx01 {
-  address pbx01ip:7789;
-  node-id 0;
-}
-#节点二名字和ip
-on pbx02 {
-  address pbx02ip:7789;
-  node-id 1;
-}
-#节点三名字和ip
-on pbx03 {
-  address pbx03ip:7789;
-  node-id 2;
-}
-
-connection-mesh {
-  #节点1、2、3名字
-  hosts pbx01 pbx02 pbx03;
-  net {
-      use-rle no;
-  }
-}
-
-}
+sed -i 's#pbx01#your-host-name#g' pbxdata.res
+sed -i 's#pbx02#your-host-name#g' pbxdata.res
+sed -i 's#pbx03#your-host-name#g' pbxdata.res
 ```
 
 拷贝到本机
