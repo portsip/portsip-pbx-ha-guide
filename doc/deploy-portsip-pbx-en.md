@@ -126,7 +126,7 @@ Perform below commands on each PBX node (Note: The disk name **/dev/sdb** should
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
 pvcreate /dev/sdb
-vgcreate pbxvg dev/sdb
+vgcreate pbxvg /dev/sdb
 lvcreate -n pbxlv -L 128G pbxvg
 ```
 
