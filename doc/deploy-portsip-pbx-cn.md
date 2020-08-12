@@ -151,9 +151,9 @@ scp ./global_common.conf  pbx03:/etc/drbd.d/
 
 接着在 master 上配置 DRBD，修改当前目录下 pbxdata.res 文件：
 ```
-sed -i 's#pbx01#your-host-name#g' pbxdata.res
-sed -i 's#pbx02#your-host-name#g' pbxdata.res
-sed -i 's#pbx03#your-host-name#g' pbxdata.res
+sed -i 's#pbx01#your-host-name1#g' pbxdata.res
+sed -i 's#pbx02#your-host-name2#g' pbxdata.res
+sed -i 's#pbx03#your-host-name3#g' pbxdata.res
 ```
 
 拷贝到本机
