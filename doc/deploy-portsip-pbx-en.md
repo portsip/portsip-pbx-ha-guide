@@ -33,7 +33,7 @@ With the HA mode, the PBX uses virtual IP to provide the service to client, and 
 
 > 3. Must resolve three PBX nodes host name to the IP, so that each host should can be pinged from other nodes. In this guide, we assume the node IPs are 192.168.1.11, 192.168.1.12, 192.168.1.13 and the host names are pbx01, pbx02, pbx03.
 
-> 4. Each node needs a new disk or a new disk partition , no formatting required. The disk or disk partition size should be same. Do not put any files into the disk / disk partition.
+> 4. Each node needs a new disk or a new disk partition , no formatting required. The disk or disk partition **size should be same**. Do not put any files into the disk / disk partition.
 ## Resolving to the host name
 Execute below command on each node. **Note: the IP and host name must be replaced with your IP address and host name**
 ```
@@ -121,12 +121,12 @@ Perform below command  on each pbx node to show the disk name or disk partition 
 fdisk -l
 ```
 
-Perform below commands on each PBX node (**The disk name should be replaced with actual disk name or disk partition name** ):
+Perform below commands on each PBX node (Note: The disk name **/dev/sdb** should be replaced with your actual disk name or disk partition name):
 
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
-pvcreate diskname
-vgcreate pbxvg diskname
+pvcreate /dev/sdb
+vgcreate pbxvg dev/sdb
 lvcreate -n pbxlv -L 128G pbxvg
 ```
 
