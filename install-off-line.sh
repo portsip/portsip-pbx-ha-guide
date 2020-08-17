@@ -13,7 +13,7 @@ init(){
 	sed -i 's#SELINUX=permissive#SELINUX=disabled#g' /etc/selinux/config
 }
 install_pacemaker(){
-      yum -y install pacemaker pcs
+      yum -y -C install pacemaker pcs
       systemctl start pcsd
       systemctl enable pcsd
 }
@@ -25,7 +25,7 @@ install_drbd(){
     echo "import rpm error"
     exit 1
     fi
-    yum install -y kmod-drbd90 drbd90-utils
+    yum install -C  -y kmod-drbd90 drbd90-utils
 }
 install_docker(){
     tar -xf docker.tar.gz
