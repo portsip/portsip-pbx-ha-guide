@@ -85,8 +85,14 @@ root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 
 # 配置pacemaker集群**只在master执行**
 
-
 /bin/bash init-pacemaker.sh pbx02 pbx03
+
+输入用户 **hacluster** 和密码**123456**后等安装完成，然后依次执行下面命令，重启所有的节点。
+```
+ssh pbx02 "reboot"
+ssh pbx03 "reboot"
+reboot
+```
 
 # 重启所有节点
 
