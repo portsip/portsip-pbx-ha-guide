@@ -16,17 +16,17 @@ net {
 }
 #节点一名字和ip
 on pbx01 {
-  address pbx01ip:7789;
+  address host01:7789;
   node-id 0;
 }
 #节点二名字和ip
 on pbx02 {
-  address pbx02ip:7789;
+  address host02:7789;
   node-id 1;
 }
 #节点三名字和ip
 on pbx03 {
-  address pbx03ip:7789;
+  address host03:7789;
   node-id 2;
 }
 
