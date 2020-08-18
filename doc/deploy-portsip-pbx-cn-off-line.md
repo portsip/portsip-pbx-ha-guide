@@ -125,9 +125,8 @@ lvcreate -n pbxlv -L 128G pbxvg
 在 master 上修改 DRBD 的配置文件然后使用 scp 分发到各节点。
 
 发送全局配置文件到各节点:
-
-```
 **注意后面的演示命令都是portsip-pbx-ha-guide下执行**
+```
 cd portsip-pbx-ha-guide
 cp -f  ./global_common.conf /etc/drbd.d/
 scp ./global_common.conf  pbx02:/etc/drbd.d/
