@@ -82,7 +82,12 @@ USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
 root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
 [root@pbx01 ~]# 
 ```
-
+# 所有的机器配置selinux和防火墙
+```
+	systemctl stop firewalld.service
+	systemctl disable firewalld.service
+	setenforce 0
+```
 # 配置pacemaker集群**只在master执行**
 ```
 /bin/bash init-pacemaker.sh pbx02 pbx03
