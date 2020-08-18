@@ -99,14 +99,6 @@ ssh pbx02 "reboot"
 ssh pbx03 "reboot"
 reboot
 ```
-
-# 重启所有节点
-
-```
-ssh pbx02 "reboot"
-ssh pbx03 "reboot"
-reboot
-```
 # 配置 Linux lvm
 在每一节点上分别执行如下命令查看 HA 要使用的硬盘名或者分区名，并记录下来：
 
