@@ -230,7 +230,7 @@ systemctl status drbd
 在每个节点上都执行如下命令：
 
 ```
-drbdadm create-md pbxdata
+drbdadm down pbxdata && drbdadm up pbxdata
 ```
 
 只需 **master** 也就是 **pbx01** 上执行如下命令:
