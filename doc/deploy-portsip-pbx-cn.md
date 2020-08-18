@@ -154,7 +154,10 @@ scp ./global_common.conf  pbx03:/etc/drbd.d/
 sed -i 's#pbx01#your-host-name1#g' pbxdata.res
 sed -i 's#pbx02#your-host-name2#g' pbxdata.res
 sed -i 's#pbx03#your-host-name3#g' pbxdata.res
-**分别把your-host-name替换成真实的主机名**
+sed -i 's#host01#your-host-ip#g' pbxdata.res
+sed -i 's#host02#your-host-ip#g' pbxdata.res
+sed -i 's#host03#your-host-ip#g' pbxdata.res
+**分别把your-host-name替换成真实的主机名，your-host-ip替换成真实的ip**
 ```
 
 拷贝到本机
