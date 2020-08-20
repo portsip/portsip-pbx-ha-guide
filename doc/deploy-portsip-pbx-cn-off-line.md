@@ -1,23 +1,8 @@
 # 准备离线资源(所有节点)
-**上传git资源包，通过git下载并解压**
-
 ```
-portsip-pbx-ha-guide
+下载地址 http://www.portsip.cn/downloads/portsip-pbx-ha-guide.tar.gz 
+上传服务器解压后进去portsip-pbx-ha-guide目录，下面所有的例子都基于portsip-pbx-ha-guide
 ```
-
-**注意需要把下面文件上传到portsip-pbx-ha-guide目录中**
-```
-docker.tar.gz
-
-elrepo-release-7.el7.elrepo.noarch.rpm
-
-
-pbx.tar.gz.gz
-
-RPM-GPG-KEY-elrepo.org
-
-yum.tar.gz
-
 # 执行portsip-pbx-ha-guide目录下的install-off-line.sh
 /bin/bash install-off-line.sh
 ```
