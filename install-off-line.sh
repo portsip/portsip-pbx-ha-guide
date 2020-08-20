@@ -1,5 +1,8 @@
 #/bin/bash
 init(){
+    systemctl stop firewalld.service
+    systemctl disable firewalld.service
+    setenforce 0
     sed -i 's#keepcache=0#keepcache=1#g' /etc/yum.conf
     rm -rf /var/cache/yum && tar xf yum.tar.gz && mv yum /var/cache/
     if [ $? -ne 0 ];then
