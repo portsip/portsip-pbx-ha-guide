@@ -2,8 +2,7 @@
 ```
 下载地址 http://www.portsip.cn/downloads/portsip-pbx-ha-guide.tar.gz 
 上传服务器解压后进去portsip-pbx-ha-guide目录，下面所有的例子都基于portsip-pbx-ha-guide目录
-```
-# 执行portsip-pbx-ha-guide目录下的install-off-line.sh
+执行下面命令离线安装
 /bin/bash install-off-line.sh
 ```
 # 先决条件
