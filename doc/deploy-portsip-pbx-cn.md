@@ -250,7 +250,7 @@ drbdadm secondary pbxdata
 如果因为拉镜像导致执行失败，当前步骤可以多次执行，直到成功。
 
 ```json
-./docker.sh pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
+./docker.sh pbx02 pbx03 192.168.1.100 123456 registry.cn-hangzhou.aliyuncs.com/portsip/pbx:12
 ```
 
 # 创建资源
@@ -280,12 +280,12 @@ drbdadm secondary pbxdata
 ## 更新pbx
 本例中的 pbx02、pbx03 分别是 node2 和 node3。
 其中 **123456** 是 PortSIP 数据库密码,  您也可以设置使用其他密码。
-其中 **portsip/pbx:12** 是要更新的版本，您可以自由地使用其他版本。
+其中 **registry.cn-hangzhou.aliyuncs.com/portsip/pbx:12** 是要更新的版本，您可以自由地使用其他版本。
 
 如果因为拉镜像导致执行失败，本步骤可以多次执行直到成功。
 命令中的 192.168.1.100 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
 
 ```
-./bin/pbx-update pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
+./bin/pbx-update pbx02 pbx03 192.168.1.100 123456 registry.cn-hangzhou.aliyuncs.com/portsip/pbx:12
 ```
 
