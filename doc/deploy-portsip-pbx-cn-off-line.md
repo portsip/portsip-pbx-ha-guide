@@ -58,14 +58,15 @@ The key's randomart image is:
 设置 pbx02 免密码登录：
 
 ```
+
+// 根据提示输入密码，如果出现（yes/no）?,需要输入yes
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx02
-根据提示输入密码，如果出现（yes/no）?,需要输入yes
 ```
 
 设置 pbx03 免密码登录：
-
-根据提示输入密码，如果出现（yes/no）?,需要输入yes
 ```
+
+// 根据提示输入密码，如果出现（yes/no）?,需要输入yes
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx03
 ```
 
