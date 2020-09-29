@@ -110,7 +110,7 @@ fdisk -l
 在每一台节点上分别执行如下命令：
 
 ```
-yum install -y yum-utils device-mapper-persistent-data lvm2
+yum install -y -C yum-utils device-mapper-persistent-data lvm2
 pvcreate 该节点的硬盘名或者分区名
 vgcreate pbxvg 该节点的硬盘名或者分区名
 lvcreate -n pbxlv -L 128G pbxvg
