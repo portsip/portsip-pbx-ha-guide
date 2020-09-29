@@ -184,6 +184,7 @@ systemctl status drbd
 
 ```
 drbdadm down pbxdata && drbdadm up pbxdata
+systemctl restart drbd
 ```
 
 只需 **master** 也就是 **pbx01** 上执行如下命令:
