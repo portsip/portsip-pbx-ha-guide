@@ -230,6 +230,7 @@ systemctl status drbd
 在每个节点上都执行如下命令：
 
 ```
+drbdadm create-md pbxdata
 drbdadm down pbxdata && drbdadm up pbxdata
 ```
 
