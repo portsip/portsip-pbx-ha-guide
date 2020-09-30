@@ -229,6 +229,7 @@ systemctl status drbd
 Perform below commands on each node:
 
 ```
+drbdadm create-md pbxdata
 drbdadm down pbxdata && drbdadm up pbxdata
 ```
 
