@@ -31,7 +31,7 @@ EOF
 本例在节点 pbx01 上执行如下命令，并按照提示生成证书：
 
 ```
-[root@kubernetes01 prometheus]# ssh-keygen -t rsa 
+[root@pbx01 ~]# ssh-keygen -t rsa 
 Generating public/private rsa key pair.
 Enter file in which to save the key (/root/.ssh/id_rsa):   输入回车
 Enter passphrase (empty for no passphrase):  输入回车
@@ -52,7 +52,7 @@ The key's randomart image is:
 |. =    +         |
 | . .    .        |
 +----[SHA256]-----+
-[root@kubernetes01 prometheus]# 
+[root@pbx01 ~]# 
 ```
 
 设置 pbx02 免密码登录：
