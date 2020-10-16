@@ -204,7 +204,7 @@ drbdadm secondary pbxdata
 如果因为拉镜像导致执行失败，当前步骤可以多次执行，直到成功。
 
 ```json
-./docker.sh pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
+/bin/bash ./docker.sh pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
 ```
 
 # 创建资源
@@ -213,7 +213,7 @@ drbdadm secondary pbxdata
 命令中的 192.168.1.100 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
 
 ```
-./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
+/bin/bash ./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
 ```
 
 现在您可以使用浏览器打开 http://192.168.1.100:8888 或者  https://192.168.1.100:8887 来配置您的 PBX。
@@ -224,12 +224,12 @@ drbdadm secondary pbxdata
 
 ## 查看pbx状态
 ```
-./bin/pbx-status
+/bin/bash ./bin/pbx-status
 ```
 ## 重启pbx
 
 ```
-./bin/pbx-restart
+/bin/bash ./bin/pbx-restart
 ```
 ## 更新pbx
 本例中的 pbx02、pbx03 分别是 node2 和 node3。
