@@ -2,7 +2,7 @@ resource pbxdata {
 
 meta-disk internal;
 device /dev/drbd1;
-disk /dev/pbxvg/pbxlv;
+disk /dev/centos/pbxlv;
 
 syncer {
   verify-alg sha1;
