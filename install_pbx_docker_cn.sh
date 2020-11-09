@@ -40,12 +40,36 @@ sudo apt-get remove -y  docker docker-engine docker.io containerd runc
 sudo apt update
 sudo apt upgrade
 sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+if [ $? -ne 0 ];then
+exit 1
+fi
 curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+if [ $? -ne 0 ];then
+echo "设置阿里云gpg错误"
+exit 1
+fi
 sudo add-apt-repository "deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable"
+if [ $? -ne 0 ];then
+echo "设置阿里云源错误"
+exit 1
+fi
 sudo apt-get update
+if [ $? -ne 0 ];then
+echo "更新软件包错误"
+exit 1
+fi
 sudo apt-get install docker-ce
+if [ $? -ne 0 ];then
+echo "安装docker 错误"
+exit 1
+fi
 sudo systemctl enable docker
 sudo systemctl start docker
+if [ $? -ne 0 ];then
+echo "启动docker 错误"
+systemctl status docker
+exit 1
+fi
 if [ $? -ne 0 ];then
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
