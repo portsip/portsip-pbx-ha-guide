@@ -37,8 +37,8 @@ Install_docker_on_centos(){
 }
 Install_docker_on_ubuntu(){
 sudo apt-get remove -y  docker docker-engine docker.io containerd runc
-sudo apt update
-sudo apt upgrade
+sudo apt update -y 
+sudo apt upgrade -y 
 sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 if [ $? -ne 0 ];then
 exit 1
@@ -53,12 +53,12 @@ if [ $? -ne 0 ];then
 echo "设置阿里云源错误"
 exit 1
 fi
-sudo apt-get update
+sudo apt-get update -y 
 if [ $? -ne 0 ];then
 echo "更新软件包错误"
 exit 1
 fi
-sudo apt-get install docker-ce
+sudo apt-get install docker-ce -y 
 if [ $? -ne 0 ];then
 echo "安装docker 错误"
 exit 1
@@ -73,22 +73,22 @@ fi
 if [ $? -ne 0 ];then
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    sudo apt-get update
-    sudo apt-get install docker-ce
-    sudo systemctl enable docker
-    sudo systemctl start docker
+    sudo apt-get update -y 
+    sudo apt-get install docker-ce -y 
+    sudo systemctl enable docker 
+    sudo systemctl start docker 
 fi
 set_ufw
 
 }
 Install_docker_on_debian(){
 sudo apt-get remove docker docker-engine docker.io containerd runc
-sudo apt update
-sudo apt upgrade
+sudo apt update -y 
+sudo apt upgrade -y 
 sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
 sudo curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-sudo  apt-get update
+sudo  apt-get update -y 
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 sudo systemctl enable docker
 sudo systemctl start docker
