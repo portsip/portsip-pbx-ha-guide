@@ -151,7 +151,7 @@ PortSIP PBX HA 方案原理如下：
 
 ## 下载离线安装资源包
 ```
-wget http://www.portsip.cn/downloads/portsip-pbx-ha-guide-12.3.2.93.tar.gz
+wget http://www.portsip.cn/downloads/portsip-pbx-ha-guide-12.3.2.93.tar.gz && tar xf portsip-pbx-ha-guide-12.3.2.93.tar.gz && cd portsip-pbx-ha-guide
 ```
 
 ## 上传资源包到主节点
