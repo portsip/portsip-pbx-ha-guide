@@ -1,114 +1,277 @@
-# 自动化安装 PortSIP PBX 高可用
-
-- [自动化安装 PortSIP PBX 高可用](#自动化安装-PortSIP-PBX-高可用)
-- [架构图](#架构图)
-- [先决条件](#先决条件)
-- [设置 host 解析](#设置host解析)
+# 目录
+- [目录](#目录)
+- [简介](#简介)
+- [原理](#原理)
+- [注意事项](#注意事项)
+- [安装系统](#安装系统)
+  - [选择语言和键盘类型](#选择语言和键盘类型)
+  - [选择最小化安装](#选择最小化安装)
+  - [磁盘分区](#磁盘分区)
+    - [选择 I will configure partitioning](#选择-i-will-configure-partitioning)
+      - [选择 LVM](#选择-lvm)
+      - [创建分区](#创建分区)
+      - [设置 LVM](#设置-lvm)
+        - [设置 LVM 的大小](#设置-lvm-的大小)
+  - [开始安装系统](#开始安装系统)
+  - [设置 root 密码](#设置-root-密码)
+  - [开机检查内核版本是否和教程一致](#开机检查内核版本是否和教程一致)
+  - [下载离线安装资源包](#下载离线安装资源包)
+  - [上传资源包到主节点](#上传资源包到主节点)
+- [安装ansible](#安装ansible)
+- [设置ansible 资源组](#设置ansible-资源组)
+- [添加解析](#添加解析)
 - [设置免密码登录](#设置免密码登录)
-- [自动安装 pacemaker 和 drbd](#自动安装-pacemaker-和-drbd)
-- [配置 Linux lvm](#配置-linux-lvm)
-- [配置 DRBD](#配置-drbd)
-- [初始化 DRBD](#初始化-drbd)
-- [配置 PBX](#配置-pbx)
-- [创建资源](#创建资源)
+- [设置变量](#设置变量)
+- [安装资源](#安装资源)
+- [重启](#重启)
+- [启动pcs](#启动pcs)
+- [初始化配置资源](#初始化配置资源)
 - [几个常用的命令](#几个常用的命令)
   - [查看 PBX 状态](#查看-pbx-状态)
-  - [重启 PBX](#重启-pbx)
-  - [更新 PBX](#更新-pbx)
+  - [重启 PBX资源](#重启-pbx资源)
+# 简介
 
+在本手册所用示例中一共使用了 3 台服务器（下文中用 PBX 节点来指称服务器，如果说三个 PBX 节点或者所有 PBX 节点，就是指三台服务器，主节点以及节点1指 pbx01, 节点2指 pbx02, 节点3指 pbx03），每台服务器的硬盘为100G。
 
+请将三台节点机器的主机名和 IP 改为如下:
 
-PortSIP  PBX 支持部署为 HA 模式, 通常将其部署在三台 PBX 服务器上（可以是物理机或者虚拟机）。其中一台 PBX 服务器崩溃或者出现故障后，另外两台中的一台即自动接替工作，并将之前已经注册的客户端和已经建立的通话信息进行恢复。 
-
-在 HA 模式下，PBX 在虚拟 IP 上为客户端提供服务，所有的客户端 APP 或者 IP Phone, 都将通过这个虚拟 IP来和 PBX 通信。
-
-
-
-# 架构图
-
-![pbx](pbx.png )
-
-# 先决条件
-
-> 1. 至少 3 台节点
->
-> 2. 操作系统：CentOS 7.6，须是 64 位系统。
-
->3. 必须设置每个节点的主机名 host 解析，要求必须能够 ping 通任一节点的主机名。 本文档以 192.168.1.11, 192.168.1.12, 192.168.1.13为例，假定他们的主机名分别为 pbx01, pbx02, pbx03。
-
->4. 3 台节点各需一块新硬盘，无需分区格式化操作，要求三个节点的新硬盘大小一致。或者每个节点各需一个新分区，新分区无需格式化操作，要求三个节点的**新分区大小一致**。新硬盘或者新分区里面不能有文件存在。
-
-# 设置 host 解析
-在每一个节点执行如下命令。**注意：需要把下面的命令里的 IP 和主机名替换成你的主机名和 IP**
 ```
-cat <<EOF >>/etc/hosts
-192.168.1.11 pbx01
-192.168.1.12 pbx02
-192.168.1.13 pbx03
+192.168.78.101 pbx01
+192.168.78.102 pbx02
+192.168.78.103 pbx03
+```
+
+本例子使用的 vip(virtual IP) 为 192.168.78.90。
+你可以自由决定服务器硬盘大小，但三台服务器的硬盘容量必须一样。
+使用的操作系统镜像是 CentOS-7-x86_64-Minimal-2009.iso（这个镜像经过我们严格测试，在无网环境下可以成功安装。其他版本镜像，可能因为内核版本过低而需要升级导致安装失败）。
+
+# 原理
+
+PortSIP PBX HA 方案原理如下：
+
++ 三台 PBX 节点同时运行，以防止在 HA 切换过程中出现脑裂现象。
++ 节点之间使用 DRBD 进行数据同步，包括当前活跃通话信息，录音文件，日志，呼叫记录，用户上传的提示语音文件等。
++ 采用虚拟 IP(VIP) 作为系统的访问入口。
++ 使用 Pacemaker 对服务器之间的状态进行监控。
++ 主节点对外提供服务，一旦主节点出现故障 DOWN 机，Pacemaker 检测到后立刻将 VIP 漂移到接替工作的备用节点，用户业务请求将被自动路由到备用节点，备用节点继续提供服务。
++ 主节点上已经建立的通话，将会自动被备用节点进行恢复。
+
+**实际测试过程中，可采取主节点断电或者断网的方式来模拟故障。**
+
+
+# 注意事项
+
+> 1、除非注明，否则下文提及的操作只在主节点 pbx01 上执行
+
+> 2、因为离线资源包过大，所以如果出现卡死的情况，耐心等待既可
+
+> 3、请把3台节点的主机名，改为pbx01、pbx02、pbx03
+
+> 4、建议硬件配置4核4G，如果低于2核2G，ha切换时受硬件影响，通话恢复时间会增加
+
+
+# 安装系统
+
+
+**注意，在三台节点服务器上都需要按照本节所描述的相同步骤来安装配置 CentOS 操作系统。**
+
+## 选择语言和键盘类型
+
+![5B94C772-64BA-46f6-B42A-014724B78AF8.png](images/5B94C772-64BA-46f6-B42A-014724B78AF8.png)
+
+
+
+## 选择最小化安装
+
+![56951B7A-9F0D-43c4-A1B0-4B9FD7EA5C59.png](images/56951B7A-9F0D-43c4-A1B0-4B9FD7EA5C59.png)
+
+
+
+## 磁盘分区
+
+![CBBF43C7-B7DC-4971-AA9C-47ADA8C3377D.png](images/CBBF43C7-B7DC-4971-AA9C-47ADA8C3377D.png)
+
+
+
+### 选择 I will configure partitioning
+
+![4736FE39-2595-47ad-966D-9441BC90C1B2.png](images/4736FE39-2595-47ad-966D-9441BC90C1B2.png)
+
+
+
+#### 选择 LVM
+
+![096888BB-9912-46f4-B5D6-6F34FE051CDF.png](images/096888BB-9912-46f4-B5D6-6F34FE051CDF.png)
+
+
+
+#### 创建分区
+
+> **注意**，本例使用的硬盘容量是 100G ，给根目录 / 分配 48G，给 /boot 分配 2G，50G 留给 PBX 在后续步骤中使用。用户安装时需按照硬盘实际大小合理分配，留给 PBX 的空间尽可能大（需要存储 PBX 录音文件，数据库文件等）。
+
+![88226396-2933-45b2-B28A-5D50D2D6EA34.png](images/88226396-2933-45b2-B28A-5D50D2D6EA34.png)
+
+
+
+#### 设置 LVM
+
+如下图，点击 **Modify** 按钮。
+
+![D4FD82B2-4EC2-4bde-90FB-B98A1FAFAB65.png](images/D4FD82B2-4EC2-4bde-90FB-B98A1FAFAB65.png)
+
+
+
+##### 设置 LVM 的大小
+
+本例中，在留给 PBX 的 50G空间上设置 LVM 分区名为 **centos** , **size policy** 选择 "**As large as possible**"。 
+点击 **Save** 按钮，一切正常，点击 **Accept Changes** 按钮。
+
+![E678CF1B-123C-4611-9264-0A973A7573E7.png](images/E678CF1B-123C-4611-9264-0A973A7573E7.png)
+
+![27CE742A-4A75-4799-A192-DAF75C7EBE89.png](images/27CE742A-4A75-4799-A192-DAF75C7EBE89.png)
+
+
+
+## 开始安装系统
+
+![C1B36BF3-04E5-4013-A76E-242EAD049820.png](images/C1B36BF3-04E5-4013-A76E-242EAD049820.png)
+
+
+
+## 设置 root 密码
+
+![7058CFB4-FB19-4a4c-970C-7E5DE71CE97A.png](images/20210123152344.png)
+
+
+
+## 开机检查内核版本是否和教程一致
+
+![7619DA48-285D-4a85-9200-8272DC19C495.png](images/7619DA48-285D-4a85-9200-8272DC19C495.png)
+
+
+## 下载离线安装资源包
+```
+wget http://www.portsip.cn/downloads/portsip-pbx-ha-guide-12.3.2.93.tar.gz
+```
+
+## 上传资源包到主节点
+
+只需上传到主节点也就是 pbx01 服务器：离线安装包下载完成后，上传资源包 portsip-pbx-ha-guide-12.3.2.93.tar.gz 到主节点机器 root 目录下。
+
+
+# 安装ansible
+只在主节点也就是节点 pbx01 执行如下命令：
+```
+yum install epel-release -y  && yum install ansible -y && yum remove epel-release
+```
+
+# 设置ansible 资源组
+只在主节点也就是节点 pbx01 执行如下命令：
+```
+cat <<EOF >>/etc/ansible/hosts
+[master]
+pbx01
+[node]
+pbx02
+pbx03
 EOF
 ```
-
+# 添加解析
+只在主节点也就是节点 pbx01 执行如下命令：
+注意：需要把下面命令里的 IP 和主机名替换成你实际使用的 IP 和 主机名。
+```
+cat <<EOF >>/etc/hosts
+192.168.78.101 pbx01
+192.168.78.102 pbx02
+192.168.78.103 pbx03
+EOF
+```
 # 设置免密码登录
-本例中，pbx01, pbx02、pbx03分别是节点1、节点2和节点3。
-本例在节点 pbx01 上执行如下命令，并按照提示生成证书：
+
+本例中，pbx01、pbx02、pbx03分别是指节点1、节点2和节点3。
+**以下命令只需在主节点也就是节点 pbx01 上执行，并按照提示生成证书：**
 
 ```
 [root@pbx01 ~]# ssh-keygen -t rsa 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):   输入回车
+Enter passphrase (empty for no passphrase):  输入回车
+Enter same passphrase again:  输入回车
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:zEsSndOuTmwMChtQXPDlMoYHELlIKq5HOxwIR1x+zO4 root@kubernetes01
+The key's randomart image is:
++---[RSA 2048]----+
+|o*++o .          |
+|.o+= = . o       |
+|=o. B * + .      |
+|*..o = + o       |
+|+oo   + S .      |
+|..o+ o * o       |
+|.o.o. E B        |
+|. =    +         |
+| . .    .        |
++----[SHA256]-----+
+[root@pbx01 ~]# 
+```
+**设置 pbx01 免密码登录（在节点 pbx01上执行）：**
+
 ```
 
-设置 pbx02 免密码登录：
+// 根据提示输入密码，如果出现（yes/no）?,需要输入yes
+[root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx01
+```
+
+**设置 pbx02 免密码登录（在节点 pbx01上执行）：**
 
 ```
+
+// 根据提示输入密码，如果出现（yes/no）?,需要输入yes
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx02
 ```
 
-设置 pbx03 免密码登录：
+
+
+**设置 pbx03 免密码登录（在节点 pbx01上执行）：**
 
 ```
+
+// 根据提示输入密码，如果出现（yes/no）?,需要输入yes
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx03
 ```
 
-测试 pbx02 免密码登录：
+# 设置变量
+如下命令只在主节点也就是节点 pbx01 上执行。
+**注意把pbx01、pbx02、pbx03、vip、pbxlv(lvm的大小，根据安装系统时候实际设置的大小修改)相关信息改为自己真实的信息**
+
+> 之前安装 CentOS 分区时（前面 “**设置 LVM**“ 小节），我们给 CentOS LVM 留了50G 的空间，这里我们使用 49G（pbxlv: 49G，直接使用50G可能报错空间不足。你需要根据你的实际硬盘情况确定，比如你安装的时候给 LVM 留的是 500G 空间，建议使用 495G 或者 490G: pbxlv: 490G）。
 
 ```
-[root@pbx01 ~]# ssh pbx02 "w"
- 14:14:20 up 8 min,  1 user,  load average: 0.00, 0.01, 0.02
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
-[root@pbx01 ~]# 
-```
+cd /root/portsip-pbx-ha-guide
 
-测试 pbx03 免密码登录：
-
-```
-[root@pbx01 ~]# ssh pbx03 "w"
- 14:14:20 up 8 min,  1 user,  load average: 0.00, 0.01, 0.02
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
-[root@pbx01 ~]# 
-```
-
-
-
-# 自动安装 pacemaker 和 drbd
-
-在 master 上操作：3 台节点中随机选择一台当做 master。本例中，我们用 pbx01做 master**：
+cat <<EOF >/root/portsip-pbx-ha-guide/vars.yml
+pbx01: 192.168.78.101
+pbx02: 192.168.78.102
+pbx03: 192.168.78.103
+vip: 192.168.78.90
+pwd: 123456
+images: portsip/pbx:12.3.2.93
+pbxlv: 49G
+EOF
 
 ```
-yum -y install git
-git clone https://github.com/portsip/portsip-pbx-ha-guide.git
-cd  portsip-pbx-ha-guide
+
+
+# 安装资源
+只在主节点也就是节点 pbx01 执行如下命令：
+```
+[root@pbx01 ~]# ansible-playbook install.yml
 ```
 
-现在执行 pacemaker.sh，等待包安装完成后，根据提示输入账号密码：
 
-```
-./pacemaker.sh pbx02 pbx03
-Username: hacluster
-Password: 
-```
-
-输入用户 **hacluster** 和密码**123456**后等安装完成，然后依次执行下面命令，重启所有的节点。
+# 重启
+只在主节点也就是节点 pbx01 执行如下命令：
 ```
 ssh pbx02 "reboot"
 ssh pbx03 "reboot"
@@ -116,177 +279,73 @@ reboot
 ```
 
 
-# 配置 Linux lvm
-在每一节点上分别执行如下命令查看 HA 要使用的硬盘名或者分区名，并记录下来：
 
+# 启动pcs
+重启之后，只在主节点也就是节点 pbx01 执行如下命令：
 ```
-fdisk -l
-```
-
-在每一台节点上分别执行如下命令(注意：您需要将命令里的磁盘分区名 **/dev/sdb** 替换为您的实际硬盘分区名)：
-
-```
-yum install -y yum-utils device-mapper-persistent-data lvm2
-pvcreate /dev/sdb
-vgcreate pbxvg /dev/sdb
-lvcreate -n pbxlv -L 128G pbxvg
-```
-
-上述命令中，挂载点为 **/dev/pbxvg/pbxlv**，128G分区大小，需要更改为您的硬盘或者分区大小。
-
-
-
-# 配置 DRBD
-以下操作只需在 master 节点上进行，本例中为 pbx01。
-
-在 master 上修改 DRBD 的配置文件然后使用 scp 分发到各节点。
-
-发送全局配置文件到各节点:
-
-```
-cp -f  ./global_common.conf /etc/drbd.d/
-scp ./global_common.conf  pbx02:/etc/drbd.d/
-scp ./global_common.conf  pbx03:/etc/drbd.d/
-```
-
-接着在 master 上配置 DRBD，修改当前目录下 pbxdata.res 文件：
-```
-resource pbxdata {
-
-meta-disk internal;
-device /dev/drbd1;
-disk /dev/pbxvg/pbxlv;
-
-syncer {
-  verify-alg sha1;
-}
-
-net {
-# allow-two-primaries no;
-  after-sb-0pri discard-zero-changes;
-  after-sb-1pri discard-secondary;
-  after-sb-2pri disconnect;
-}
-#节点一名字和ip
-on pbx01 {
-  address pbx01ip:7789;
-  node-id 0;
-}
-#节点二名字和ip
-on pbx02 {
-  address pbx02ip:7789;
-  node-id 1;
-}
-#节点三名字和ip
-on pbx03 {
-  address pbx03ip:7789;
-  node-id 2;
-}
-
-connection-mesh {
-  #节点1、2、3名字
-  hosts pbx01 pbx02 pbx03;
-  net {
-      use-rle no;
-  }
-}
-
-}
-```
-
-拷贝到本机
-
-```
-cp -f pbxdata.res /etc/drbd.d/
-```
-拷贝到 pbx02
-
-```
-scp  pbxdata.res pbx02:/etc/drbd.d/
-```
-
-拷贝到 pbx03
-
-```
-scp  pbxdata.res pbx03:/etc/drbd.d/
+pcs cluster enable --all
+pcs cluster start --all
 ```
 
 
-
-# 初始化 DRBD
-
-在每个节点上都执行如下命令启动 DRBD：
-
+# 初始化配置资源
+只在主节点也就是节点 pbx01 执行如下命令（执行过程可能较长，耐心等待即可，中途不要中断、重启或者关机）：
 ```
-systemctl start drbd
+[root@pbx01 ~]# cd /root/portsip-pbx-ha-guide/ && ansible-playbook config.yml
 ```
 
-在每个节点上都查看 DRBD状态是否是 running。
+资源配置完成后，您可以使用浏览器打开 http://192.168.78.90:8888 或者  https://192.168.78.90:8887 来配置您的 PBX。
 
-```
-systemctl status drbd
-```
+后续对 PBX 的管理配置和访问，都是通过 Virtual IP 192.168.78.90 来进行。
 
-在每个节点上都执行如下命令：
+设置向导的第一步填写 Virtual IP，您需要替换为您的实际 Virtual IP。
 
-```
-drbdadm create-md pbxdata
-drbdadm down pbxdata && drbdadm up pbxdata
-```
-
-只需 **master** 也就是 **pbx01** 上执行如下命令:
-
-```
-drbdadm -- --clear-bitmap new-current-uuid pbxdata
-drbdadm primary --force pbxdata
-mkfs.xfs /dev/drbd1
-drbdadm secondary pbxdata
-```
-
-# 配置 PBX
-部署 PortSIP PBX 为 HA 模式的时候，我们需要一个 Virtual IP 来用代表 PBX 让外部访问，这个 Virtual IP 必须没有被其他的机器所使用，本例中我们使用 **192.168.1.100** 作为 Virtual IP。在实际部署场景中，您需要根据您的网络情况来选中一个合适的 IP 作为 Virtual IP。
-
-如下命令中，pbx02、pbx03 分别是 node2 和 node3。
-其中123456是PortSIP 数据库密码, 您也可以设置使用其他密码.
-如果因为拉镜像导致执行失败，当前步骤可以多次执行，直到成功。
-
-```json
-./docker.sh pbx02 pbx03 192.168.1.100 123456 registry.cn-hangzhou.aliyuncs.com/portsip/pbx:12
-```
-
-# 创建资源
-在master 也就是 pbx01上执行如下操作，如果不报错证明安装成功。可通过 ./bin/pbx-status查看状态。
-
-命令中的 192.168.1.100 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
-
-```
-./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
-```
-
-现在您可以使用浏览器打开 http://192.168.1.100:8888 或者  https://192.168.1.100:8887 来配置您的 PBX。
+![7738AF0C-86F6-48c0-88E0-ED1A7A8C9946.png](images/7738AF0C-86F6-48c0-88E0-ED1A7A8C9946.png)
 
 
+
+进入 PBX 的 web 管理界面后，在菜单 **Advanced > Settings > Advanced** 页面下勾选 **Enable call recovery** 并点击 "**Apply**" 按钮。
+
+![1429EB62-20EB-408f-9462-08A085F6707D.png](images/1429EB62-20EB-408f-9462-08A085F6707D.png)
 
 # 几个常用的命令
-
-## 查看pbx状态
 ```
-./bin/pbx-status
-```
-## 重启pbx
-
-```
-./bin/pbx-restart
-```
-## 更新pbx
-本例中的 pbx02、pbx03 分别是 node2 和 node3。
-其中 **123456** 是 PortSIP 数据库密码,  您也可以设置使用其他密码。
-其中 **registry.cn-hangzhou.aliyuncs.com/portsip/pbx:12** 是要更新的版本，您可以自由地使用其他版本。
-
-如果因为拉镜像导致执行失败，本步骤可以多次执行直到成功。
-命令中的 192.168.1.100 是本例的 Virtual IP, 您需要替换为您的实际 Virtual IP。
-
-```
-./bin/pbx-update pbx02 pbx03 192.168.1.100 123456 registry.cn-hangzhou.aliyuncs.com/portsip/pbx:12
+基于/root/portsip-pbx-ha-guide目录
 ```
 
+## 查看 PBX 状态
+
+```
+/bin/bash ./bin/pbx-status
+
+如下输出，信息表示所有组件运行正常，pbx03为master pbx01、pbx02为slave节点
+[root@pbx01 portsip-pbx-ha-guide]# /bin/bash ./bin/pbx-status
+ Master/Slave Set: drbd_devpath_master [drbd_devpath]
+     Masters: [ pbx03 ]
+     Slaves: [ pbx01 pbx02 ]
+ vip  (ocf::heartbeat:IPaddr2):  Started pbx03
+ src_pkt_ip  (ocf::heartbeat:IPsrcaddr):  Started pbx03
+ datapath_fs  (ocf::heartbeat:Filesystem):  Started pbx03
+ pbx  (ocf::portsip:pbx):  Started pbx03
+[root@pbx01 portsip-pbx-ha-guide]# 
+
+```
+
+
+## 重启 PBX资源
+
+如下命令执行后，将会重启整个集群pbx相关资源。
+
+```
+/bin/bash ./bin/pbx-restart
+
+
+如下是执行成功的输出信息
+[root@pbx01 portsip-pbx-ha-guide]# /bin/bash ./bin/pbx-restart
+drbd_devpath_master successfully restarted
+vip successfully restarted
+src_pkt_ip successfully restarted
+datapath_fs successfully restarted
+pbx successfully restarted
+[root@pbx01 portsip-pbx-ha-guide]# 
+```
