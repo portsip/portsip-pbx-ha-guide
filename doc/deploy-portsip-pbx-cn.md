@@ -16,7 +16,6 @@
   - [设置 root 密码](#设置-root-密码)
   - [开机检查内核版本是否和教程一致](#开机检查内核版本是否和教程一致)
   - [下载离线安装资源包](#下载离线安装资源包)
-  - [上传资源包到主节点](#上传资源包到主节点)
 - [安装ansible](#安装ansible)
 - [设置ansible 资源组](#设置ansible-资源组)
 - [添加解析](#添加解析)
@@ -154,9 +153,6 @@ PortSIP PBX HA 方案原理如下：
 wget http://www.portsip.cn/downloads/portsip-pbx-ha-guide-12.3.2.93.tar.gz && tar xf portsip-pbx-ha-guide-12.3.2.93.tar.gz && cd portsip-pbx-ha-guide
 ```
 
-## 上传资源包到主节点
-
-只需上传到主节点也就是 pbx01 服务器：离线安装包下载完成后，上传资源包 portsip-pbx-ha-guide-12.3.2.93.tar.gz 到主节点机器 root 目录下。
 
 
 # 安装ansible
