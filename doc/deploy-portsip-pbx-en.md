@@ -1,112 +1,276 @@
-# Deploying PortSIP PBX HA
+# 目录
+- [目录](#目录)
+- [简介](#简介)
+- [原理](#原理)
+- [注意事项](#注意事项)
+- [安装系统](#安装系统)
+  - [选择语言和键盘类型](#选择语言和键盘类型)
+  - [选择最小化安装](#选择最小化安装)
+  - [磁盘分区](#磁盘分区)
+    - [选择 I will configure partitioning](#选择-i-will-configure-partitioning)
+      - [选择 LVM](#选择-lvm)
+      - [创建分区](#创建分区)
+      - [设置 LVM](#设置-lvm)
+        - [设置 LVM 的大小](#设置-lvm-的大小)
+  - [开始安装系统](#开始安装系统)
+  - [设置 root 密码](#设置-root-密码)
+  - [开机检查内核版本是否和教程一致](#开机检查内核版本是否和教程一致)
+  - [下载离线安装资源包](#下载离线安装资源包)
+- [安装ansible](#安装ansible)
+- [设置ansible 资源组](#设置ansible-资源组)
+- [添加解析](#添加解析)
+- [设置免密码登录](#设置免密码登录)
+- [设置变量](#设置变量)
+- [安装资源](#安装资源)
+- [重启](#重启)
+- [启动pcs](#启动pcs)
+- [初始化配置资源](#初始化配置资源)
+- [几个常用的命令](#几个常用的命令)
+  - [查看 PBX 状态](#查看-pbx-状态)
+  - [重启 PBX资源](#重启-pbx资源)
+# Introduction
 
-- [Architecture](#Architecture-diagram)
-- [Prerequisites](#Prerequisites)
-- [Resolving to the host name](#Resolving-to-the-host-name)
-- [Setting up password-free SSH login](#Setting-up-password-free-SSH-login)
-- [Installing pacemaker and drbd automatically](#Installing-pacemaker-and-drbd-automatically)
-- [Configuring the Linux lvm](#Configuring-the-Linux-lvm)
-- [Configuring DRBD](#Configuring-DRBD)
-- [Initializingthe DRBD](#Initializing-the-DRBD)
-- [Configuring PBX](#Configuring-PBX)
-- [Creating resources](#Creating-resources)
-- [Frequently used commands](#Frequently-used-commands)
-  - [Checking PBX status](#Checking-PBX-status)
-  - [Restarting pbx](#Restarting-pbx)
-  - [Updating pbx](#Updating-pbx)
+In the examples used in this manual, a total of three servers are used (PBX nodes are used to refer to servers in the following, if three PBX nodes or all PBX nodes refer to three servers, master node and node 1 refer to pbx01, node 2 refer to pbx02, and node 3 refer to pbx03). The hard disk of each server is 100g
 
+Please change the host names and IP addresses of the three node machines as follows:
 
-
-PortSIP PBX enables HA deployment, which is typically implemented with three servers (Physical machine or Virtual machine). When one of the PBX servers is down, the registrations and calls on this PBX server will be restored on another server automatically.
-
-With the HA mode, the PBX uses virtual IP to provide the service to client, and the client App/IP Phone registers to the PBX and makes call(s) with the PBX by using this virtual IP.
-
-
-
-## Architecture
-
-![pbx](pbx.png)
-## Prerequisites
-> 1. Must be started with a minimum of three PBX nodes
-
-> 2. The OS should be: CentOS 7.6, 64 bit.
-
-> 3. Must resolve three PBX nodes host name to the IP, so that each host should can be pinged from other nodes. In this guide, we assume the node IPs are 192.168.1.11, 192.168.1.12, 192.168.1.13 and the host names are pbx01, pbx02, pbx03.
-
-> 4. Each node needs a new disk or a new disk partition , no formatting required. The disk or disk partition **size should be same**. Do not put any files into the disk / disk partition.
-## Resolving to the host name
-Execute below command on each node. **Note: the IP and host name must be replaced with your IP address and host name**
 ```
-cat <<EOF >>/etc/hosts
-192.168.1.11 pbx01
-192.168.1.12 pbx02
-192.168.1.13 pbx03
+192.168.78.101 pbx01
+192.168.78.102 pbx02
+192.168.78.103 pbx03
+```
+
+The VIP (virtual IP) used in this example is 192.168.78.90.
+You are free to decide the size of the server's hard disk, but the hard disk capacity of the three servers must be the same.
+The operating system image used is centos-7-x86_ 64-minimal-2009.iso (this image has been strictly tested by us and can be successfully installed in a no network environment. The image of other versions may need to be upgraded because the kernel version is too low, resulting in installation failure.)
+
+# principle
+
+PortSIP PBX HA The principle of the scheme is as follows：
+
++ Three PBX nodes are running at the same time to prevent split-brain during HA switching.
++ Use DRBD to synchronize data between nodes, including current active call information, recording files, logs, call records, and prompt voice files uploaded by users.
++ Use virtual IP (VIP) as the access entry of the system.
++ Use Pacemaker to monitor the status between servers.
++ The primary node provides external services. Once the primary node has a DOWN machine, Pacemaker will immediately drift the VIP to the standby node that takes over after detecting it. User service requests will be automatically routed to the standby node, and the standby node will continue to provide services.
++ The established call on the primary node will be automatically restored by the standby node.
+
+**In the actual test process, the main node can be cut off or disconnected to simulate the fault。**
+
+
+#Precautions
+
+
+
+>1. Unless otherwise specified, the operations mentioned below are only performed on the master node pbx01
+
+>2. Because the offline resource package is too large, you can wait patiently if it gets stuck
+
+>3. Please change the host names of the three nodes to pbx01, pbx02 and pbx03
+
+>4. It is recommended to configure 4-core 4G hardware. If it is lower than 2-core 2G, ha handoff will be affected by hardware, and call recovery time will increase
+
+
+# Installation system
+
+
+**Note that you need to follow the same steps described in this section to install and configure the CentOS operating system on all three node servers.**
+
+## Select language and keyboard type
+
+![5B94C772-64BA-46f6-B42A-014724B78AF8.png](images/5B94C772-64BA-46f6-B42A-014724B78AF8.png)
+
+
+
+## Choose minimize installation
+
+![56951B7A-9F0D-43c4-A1B0-4B9FD7EA5C59.png](images/56951B7A-9F0D-43c4-A1B0-4B9FD7EA5C59.png)
+
+
+
+## Disk partition
+
+![CBBF43C7-B7DC-4971-AA9C-47ADA8C3377D.png](images/CBBF43C7-B7DC-4971-AA9C-47ADA8C3377D.png)
+
+
+
+### Choose I will configure partitioning
+
+![4736FE39-2595-47ad-966D-9441BC90C1B2.png](images/4736FE39-2595-47ad-966D-9441BC90C1B2.png)
+
+
+
+#### Choose LVM
+
+![096888BB-9912-46f4-B5D6-6F34FE051CDF.png](images/096888BB-9912-46f4-B5D6-6F34FE051CDF.png)
+
+
+
+#### Create partition
+
+> **注意**，本例使用的硬盘容量是 100G ，给根目录 / 分配 48G，给 /boot 分配 2G，50G 留给 PBX 在后续步骤中使用。用户安装时需按照硬盘实际大小合理分配，留给 PBX 的空间尽可能大（需要存储 PBX 录音文件，数据库文件等）。
+
+![88226396-2933-45b2-B28A-5D50D2D6EA34.png](images/88226396-2933-45b2-B28A-5D50D2D6EA34.png)
+
+
+
+####Set LVM
+
+如下图，点击 **Modify** 按钮。
+
+![D4FD82B2-4EC2-4bde-90FB-B98A1FAFAB65.png](images/D4FD82B2-4EC2-4bde-90FB-B98A1FAFAB65.png)
+
+
+
+##### set  LVM size
+
+In this example, set the LVM partition name * * CentOS * * on the 50g space left for PBX, and select "* * as large as possible * *" for * * Size policy * *.
+
+Click the * * save * * button and everything is OK. Click the * * accept changes * * button.
+
+![E678CF1B-123C-4611-9264-0A973A7573E7.png](images/E678CF1B-123C-4611-9264-0A973A7573E7.png)
+
+![27CE742A-4A75-4799-A192-DAF75C7EBE89.png](images/27CE742A-4A75-4799-A192-DAF75C7EBE89.png)
+
+
+
+## Start installing the system
+
+![C1B36BF3-04E5-4013-A76E-242EAD049820.png](images/C1B36BF3-04E5-4013-A76E-242EAD049820.png)
+
+
+
+## Set root password
+
+![7058CFB4-FB19-4a4c-970C-7E5DE71CE97A.png](images/20210123152344.png)
+
+
+
+## Boot to check whether the kernel version is consistent with the tutorial
+
+![7619DA48-285D-4a85-9200-8272DC19C495.png](images/7619DA48-285D-4a85-9200-8272DC19C495.png)
+
+
+## Download offline installation resource package
+```
+wget http://www.portsip.cn/downloads/portsip-pbx-ha-guide-12.3.2.93.tar.gz && tar xf portsip-pbx-ha-guide-12.3.2.93.tar.gz && cd portsip-pbx-ha-guide
+```
+
+
+
+# Install ansible
+Execute the following command only at the master node, that is, node pbx01：
+```
+yum install epel-release -y  && yum install ansible -y && yum remove epel-release
+```
+
+# Set ansible resource group
+Execute the following command only at the master node, that is, node pbx01：
+```
+cat <<EOF >>/etc/ansible/hosts
+[master]
+pbx01
+[node]
+pbx02
+pbx03
 EOF
 ```
-## Setting up password-free SSH login
-**This step is very important!**
+# Add parsing
+Execute the following command only on the master node, that is, node pbx01:
+Note: you need to replace the IP and host name in the following command with your actual IP and host name.
+```
+cat <<EOF >>/etc/hosts
+192.168.78.101 pbx01
+192.168.78.102 pbx02
+192.168.78.103 pbx03
+EOF
+```
+# Set password free login
 
-We assuming the host name pbx01, pbx02、pbx03 is the node 1, node 2, node 3.
-
-Perform below commands on pbx01, enter necessary information according the prompts:
+In this example, pbx01, pbx02 and pbx03 refer to node 1, node 2 and node 3 respectively.
+**The following command only needs to be executed on the primary node, that is, pbx01, and the certificate is generated according to the prompt:**
 
 ```
 [root@pbx01 ~]# ssh-keygen -t rsa 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):  Enter carriage return
+Enter passphrase (empty for no passphrase):  Enter carriage return
+Enter same passphrase again:  Enter carriage return
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:zEsSndOuTmwMChtQXPDlMoYHELlIKq5HOxwIR1x+zO4 root@kubernetes01
+The key's randomart image is:
++---[RSA 2048]----+
+|o*++o .          |
+|.o+= = . o       |
+|=o. B * + .      |
+|*..o = + o       |
+|+oo   + S .      |
+|..o+ o * o       |
+|.o.o. E B        |
+|. =    +         |
+| . .    .        |
++----[SHA256]-----+
+[root@pbx01 ~]# 
+```
+**Set up pbx01 password free login (executed on pbx01 node):**
+
 ```
 
-Setup password-free SSH login on pbx02：
+//Enter the password according to the prompt. If (yes / no)? Appears, you need to enter yes
+[root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx01
+```
+
+**Set up pbx02 password free login (executed on pbx01 node):**
 
 ```
+
+//Enter the password according to the prompt. If (yes / no)? Appears, you need to enter yes
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx02
 ```
 
-Setup password-free SSH login on pbx03：
+
+
+**Set up pbx03 password free login (executed on pbx01 node):**
 
 ```
+
+//Enter the password according to the prompt. If (yes / no)? Appears, you need to enter yes
 [root@pbx01 ~]# ssh-copy-id -i ~/.ssh/id_rsa.pub pbx03
 ```
 
-Test password-free SSH login on pbx02:
+# Set variables
+The following command is only executed on the master node, that is, node pbx01.
+**Pay attention to change the information about pbx01, pbx02, pbx03, VIP and pbxlv (the size of LVM is modified according to the actual size set when installing the system) to your own real information**
+
+>When installing the CentOS partition (in the previous section of "* *" setting LVM * * "), we reserved 50g space for the CentOS LVM. Here we use 49G (pbxlv: 49G, if we use 50g directly, we may report that the space is insufficient. You need to determine according to your actual hard disk situation. For example, when you install, you leave 500g space for LVM. It is recommended to use 495G or 490g: pbxlv: 490g).
 
 ```
-[root@pbx01 ~]# ssh pbx02 "w"
- 14:14:20 up 8 min,  1 user,  load average: 0.00, 0.01, 0.02
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
-[root@pbx01 ~]# 
-```
+cd /root/portsip-pbx-ha-guide
 
-Test password-free SSH login on pbx03:
-
-```
-[root@pbx01 ~]# ssh pbx03 "w"
- 14:14:20 up 8 min,  1 user,  load average: 0.00, 0.01, 0.02
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-root     pts/0    192.168.1.210    14:09    4:28   0.01s  0.01s -bash
-[root@pbx01 ~]# 
-```
-
-
-
-## Installing pacemaker and drbd automatically
-
-Set pbx01 as master, and perform below commands on it:
+cat <<EOF >/root/portsip-pbx-ha-guide/vars.yml
+pbx01: 192.168.78.101
+pbx02: 192.168.78.102
+pbx03: 192.168.78.103
+vip: 192.168.78.90
+pwd: 123456
+images: portsip/pbx:12.3.2.93
+pbxlv: 49G
+EOF
 
 ```
-yum -y install git
-git clone https://github.com/portsip/portsip-pbx-ha-guide.git
-cd  portsip-pbx-ha-guide
+
+
+# Install resources
+Execute the following command only on the master node, that is, node pbx01:
+```
+[root@pbx01 ~]# ansible-playbook install.yml
 ```
 
-Now execute **pacemaker.sh**. Once the installation completes, enter the username and password as prompted:
 
-```
-./pacemaker.sh pbx02 pbx03
-Username: hacluster
-Password: 
-```
-
-Enter username **hacluster** and password **123456**. Once the installation completes, perform below command one by one to restart all nodes:
+# Restart
+Execute the following command only on the master node, that is, node pbx01:
 ```
 ssh pbx02 "reboot"
 ssh pbx03 "reboot"
@@ -114,187 +278,70 @@ reboot
 ```
 
 
-## Configuring the Linux lvm
-Perform below command  on each pbx node to show the disk name or disk partition name and note them down:
 
+# Start PCs
+After restart, execute the following command only at the primary node, that is, node pbx01:
 ```
-fdisk -l
-```
-
-Perform below commands on each PBX node (Note: The disk name **/dev/sdb** should be replaced with your actual disk name or disk partition name):
-
-```
-yum install -y yum-utils device-mapper-persistent-data lvm2
-pvcreate /dev/sdb
-vgcreate pbxvg /dev/sdb
-lvcreate -n pbxlv -L 128G pbxvg
-```
-
-In above commands, the mount point is /dev/pbxvg/pbxlv ( **do not change it**), and disk / disk partition size is 128G. **Please change the size to actual disk / disk partition size.**
-
-
-
-## Configuring DRBD
-Modify the DRBD configuration on master node (in this case it is the pbx01) and send to other nodes by using scp.
-
-Send the global configuration file to other nodes:
-
-```
-cp -f  ./global_common.conf /etc/drbd.d/
-scp ./global_common.conf  pbx02:/etc/drbd.d/
-scp ./global_common.conf  pbx03:/etc/drbd.d/
+pcs cluster enable --all
+pcs cluster start --all
 ```
 
 
-
-Modify the **pbxdata.res** in current path:
-
+#Initialize configuration resources
+Only in the master node, that is, pbx01, execute the following commands (the execution process may be long, just wait patiently, and don't interrupt, restart or shut down in the middle of the process)
 ```
-resource pbxdata {
-
-meta-disk internal;
-device /dev/drbd1;
-disk /dev/pbxvg/pbxlv;
-
-syncer {
-  verify-alg sha1;
-}
-
-net {
-# allow-two-primaries no;
-  after-sb-0pri discard-zero-changes;
-  after-sb-1pri discard-secondary;
-  after-sb-2pri disconnect;
-}
-# node 1 
-on pbx01 {
-  address pbx01ip:7789;
-  node-id 0;
-}
-# node 2
-on pbx02 {
-  address pbx02ip:7789;
-  node-id 1;
-}
-# node 3
-on pbx03 {
-  address pbx03ip:7789;
-  node-id 2;
-}
-
-connection-mesh {
-  # the host name of node 1, node 2, node 3
-  hosts pbx01 pbx02 pbx03;
-  net {
-      use-rle no;
-  }
-}
-
-}
+[root@pbx01 ~]# cd /root/portsip-pbx-ha-guide/ && ansible-playbook config.yml
 ```
 
-Copy to local host
+After the resource configuration is completed, you can use the browser to open it http://192.168.78.90 : 8888 or https://192.168.78.90 : 8887 to configure your PBX.
+Subsequent PBX management, configuration and access are carried out through virtual IP 192.168.78.90.
+The first step of the setup wizard is to fill in the virtual IP. You need to replace it with your actual virtual IP.
+
+![7738AF0C-86F6-48c0-88E0-ED1A7A8C9946.png](images/7738AF0C-86F6-48c0-88E0-ED1A7A8C9946.png)
+
+
+
+After entering the web management interface of PBX, under the menu * * advanced > Settings > Advanced * * page, check * * enable call recovery * * and click the "* * apply * *" button.
+
+![1429EB62-20EB-408f-9462-08A085F6707D.png](images/1429EB62-20EB-408f-9462-08A085F6707D.png)
+
+# Several common commands
+```
+Based on / root / portsip PBX ha guide directory
+```
+
+## 查看 PBX 状态
 
 ```
-cp -f pbxdata.res /etc/drbd.d/
-```
-Copy to pbx02
+/bin/bash ./bin/pbx-status
 
-```
-scp  pbxdata.res pbx02:/etc/drbd.d/
-```
+The following output shows that all components are running normally. Pbx03 is the master, pbx01 and pbx02 are slave nodes
+[root@pbx01 portsip-pbx-ha-guide]# /bin/bash ./bin/pbx-status
+ Master/Slave Set: drbd_devpath_master [drbd_devpath]
+     Masters: [ pbx03 ]
+     Slaves: [ pbx01 pbx02 ]
+ vip  (ocf::heartbeat:IPaddr2):  Started pbx03
+ src_pkt_ip  (ocf::heartbeat:IPsrcaddr):  Started pbx03
+ datapath_fs  (ocf::heartbeat:Filesystem):  Started pbx03
+ pbx  (ocf::portsip:pbx):  Started pbx03
+[root@pbx01 portsip-pbx-ha-guide]# 
 
-Copy to pbx03
-
-```
-scp  pbxdata.res pbx03:/etc/drbd.d/
 ```
 
 
-
-### Initializing the DRBD
-
-Start the DRBD on each node by executing below command:
+## Restart PBX resource
+After the following command is executed, the PBX related resources of the whole cluster will be restarted.
 
 ```
-systemctl start drbd
+/bin/bash ./bin/pbx-restart
+
+
+The following is the output of successful execution
+[root@pbx01 portsip-pbx-ha-guide]# /bin/bash ./bin/pbx-restart
+drbd_devpath_master successfully restarted
+vip successfully restarted
+src_pkt_ip successfully restarted
+datapath_fs successfully restarted
+pbx successfully restarted
+[root@pbx01 portsip-pbx-ha-guide]# 
 ```
-
-Check if the DRBD status on each node is running:
-
-```
-systemctl status drbd
-```
-
-Perform below commands on each node:
-
-```
-drbdadm create-md pbxdata
-drbdadm down pbxdata && drbdadm up pbxdata
-```
-
-Perform below command **on master only,  i.e. pbx01:**
-
-```
-drbdadm -- --clear-bitmap new-current-uuid pbxdata
-drbdadm primary --force pbxdata
-mkfs.xfs /dev/drbd1
-drbdadm secondary pbxdata
-```
-
-
-
-
-## Configuring PBX
-When configuring the PBX HA , we will need a virtual IP for accessing the PBX cluster, and the virtual IP must not be used by other machines.
-
-In below commands, **we assume use 192.168.1.100 for virtual IP.**
-
-The 123456 is he PBX DB password, the pbx02 and pbx03 is the host name of node1, node2.
-
-If it fails in this step, repeat below command until successful execution.
-
-```json
-./docker.sh pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
-```
-## Creating resources
-Perform below commands on master node (In this case it is the pbx01). No error appeared indicates that you have successfully configured the PortSIP PBX HA.
-
-The 192.168.1.100 is the virtual IP you use.
-
-You can use **./bin/pbx-status** to view the status.
-
-```
-./create_pacemaker_resources.sh  pbx02 pbx03  192.168.1.100
-```
-
-Now you can use your browser to visit http://192.168.1.100:8888 or https://192.168.1.100:8887 to configure your PBX.
-
-
-
-# Frequently used commands
-
-## Checking PBX status
-```
-./bin/pbx-status
-```
-## Restarting PBX
-
-```
-./bin/pbx-restart
-```
-## Updating PBX
-In this case the pbx02 is node2, and pbx 03 is node3.
-The 123456 is password for PortSIP PBX DB, you can use other words as your password.
-The **portsip/pbx:12** is the new version to be updated to.
-
-The 192.168.1.100 is the virtual IP you used.
-
-If you fail this step, you can repeat below command until success.
-
-Perform below command on pbx01:
-
-```
-./bin/pbx-update pbx02 pbx03 192.168.1.100 123456 portsip/pbx:12
-```
-
