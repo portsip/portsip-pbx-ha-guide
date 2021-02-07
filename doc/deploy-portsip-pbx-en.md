@@ -3,7 +3,7 @@
 - [principle](#principle)
 - [Precautions](#Precautions)
 - [Installation system](#Installation-system)
-  - [Select language and keyboard type](#Select language and keyboard type)
+  - [Select language and keyboard type](#Select-language-and-keyboard-type)
   - [Choose minimize installation](#Choose-minimize-installation)
   - [Disk partition](#Disk-partition)
     - [Choose I will configure partitioning](#Choose-i-will-configure-partitioning)
