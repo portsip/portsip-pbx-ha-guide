@@ -1,33 +1,32 @@
-# 目录
-- [目录](#目录)
-- [简介](#简介)
-- [原理](#原理)
-- [注意事项](#注意事项)
-- [安装系统](#安装系统)
-  - [选择语言和键盘类型](#选择语言和键盘类型)
-  - [选择最小化安装](#选择最小化安装)
-  - [磁盘分区](#磁盘分区)
-    - [选择 I will configure partitioning](#选择-i-will-configure-partitioning)
-      - [选择 LVM](#选择-lvm)
-      - [创建分区](#创建分区)
-      - [设置 LVM](#设置-lvm)
-        - [设置 LVM 的大小](#设置-lvm-的大小)
-  - [开始安装系统](#开始安装系统)
-  - [设置 root 密码](#设置-root-密码)
-  - [开机检查内核版本是否和教程一致](#开机检查内核版本是否和教程一致)
-  - [下载离线安装资源包](#下载离线安装资源包)
-- [安装ansible](#安装ansible)
-- [设置ansible 资源组](#设置ansible-资源组)
-- [添加解析](#添加解析)
-- [设置免密码登录](#设置免密码登录)
-- [设置变量](#设置变量)
-- [安装资源](#安装资源)
-- [重启](#重启)
-- [启动pcs](#启动pcs)
-- [初始化配置资源](#初始化配置资源)
-- [几个常用的命令](#几个常用的命令)
-  - [查看 PBX 状态](#查看-pbx-状态)
-  - [重启 PBX资源](#重启-pbx资源)
+# index
+- [Introduction](#Introduction)
+- [principle](#principle)
+- [Precautions](#Precautions)
+- [Installation system](#Installation-system)
+  - [Select language and keyboard type](#Select language and keyboard type)
+  - [Choose minimize installation](#Choose-minimize-installation)
+  - [Disk partition](#Disk-partition)
+    - [Choose I will configure partitioning](#Choose-i-will-configure-partitioning)
+      - [Choose LVM](#Choose-lvm)
+      - [Create partition](#Create-partition)
+      - [Set LVM](#Set-LVM)
+        - [set  LVM size](#set-LVM-size)
+  - [Start installing the system](#Start-installing-the-system)
+  - [Set root password](#Set-root-password)
+  - [Boot to check whether the kernel version is consistent with the tutorial](#Boot-to-check-whether-the-kernel-version-is-consistent-with-the-tutorial)
+  - [Download offline installation resource package](#Download-offline-installation-resource-package)
+- [Install ansible](#Install-ansible)
+- [Set ansible resource group](#Set-ansible-resource-group)
+- [Add parsing](#Add-parsing)
+- [Set password free login](#Set-password-free-login)
+- [Set variables](#Set-variables)
+- [Install resources](#Install resources)
+- [Restart](#Restart)
+- [Start pcs](#Start pcs)
+- [Initialize configuration resources](#Initialize-configuration-resources)
+- [Several common commands](#Several-common-commands)
+  - [View PBX status](#View-PBX-status)
+  - [Restart PBX resource](#Restart-PBX-resource)
 # Introduction
 
 In the examples used in this manual, a total of three servers are used (PBX nodes are used to refer to servers in the following, if three PBX nodes or all PBX nodes refer to three servers, master node and node 1 refer to pbx01, node 2 refer to pbx02, and node 3 refer to pbx03). The hard disk of each server is 100g
@@ -310,7 +309,7 @@ After entering the web management interface of PBX, under the menu * * advanced 
 Based on / root / portsip PBX ha guide directory
 ```
 
-## 查看 PBX 状态
+## View PBX status
 
 ```
 /bin/bash ./bin/pbx-status
