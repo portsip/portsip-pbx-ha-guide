@@ -3,7 +3,7 @@
 
 # Introduction
 
-This manual is for guide deploy the PortSIP HA on CentOS.
+This manual is for guide deploy the PortSIP HA on CentOS 7.9.
 
 In the examples used in this manual, a total of three servers are used (PBX nodes are used to refer to servers in the following, if three PBX nodes or all PBX nodes refer to three servers, master node and node 1 refer to pbx01, node 2 refer to pbx02, and node 3 refer to pbx03). 
 
@@ -319,7 +319,7 @@ Based on /root/portsip-pbx-ha-guide directory
 
 ## View PBX status
 
-```
+```shell
 /bin/bash ./bin/pbx-status
 
 The following output shows that all components are running normally. Pbx03 is the master, pbx01 and pbx02 are slave nodes
@@ -339,7 +339,7 @@ The following output shows that all components are running normally. Pbx03 is th
 ## Restart PBX resource
 After the following command is executed, the PBX related resources of the whole cluster will be restarted.
 
-```
+```shell
 /bin/bash ./bin/pbx-restart
 
 
