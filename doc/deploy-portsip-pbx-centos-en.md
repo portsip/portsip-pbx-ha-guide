@@ -20,7 +20,7 @@ Please change the host names and IP addresses of the three node machines as foll
 
 
 
-The OS image used is **centos-7-x86_ 64-minimal-2009.iso** (this image has been strictly tested by us and can be successfully installed in a no network environment. The image of other versions may need to be upgraded because the kernel version is too low, resulting in installation failure.)
+The OS version requires CentOS 7.9.
 
 
 
