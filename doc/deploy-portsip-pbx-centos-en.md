@@ -20,7 +20,7 @@ Please change the host names and IP addresses of the three node machines as foll
 
 
 
-The OS version requires CentOS 7.9.
+The OS version is requires CentOS 7.9.
 
 
 
