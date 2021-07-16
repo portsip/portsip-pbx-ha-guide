@@ -3,11 +3,15 @@
 
 # Introduction
 
+This manual is for guide deploy the PortSIP HA on **Ubuntu 20.04**.
+
 In the examples used in this manual, a total of three servers are used (PBX nodes are used to refer to servers in the following, if three PBX nodes or all PBX nodes refer to three servers, master node and node 1 refer to pbx01, node 2 refer to pbx02, and node 3 refer to pbx03). 
 
-For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 100GB, and created two volumes, one is 48G for Linux OS, another volume 50 for store the PBX data.
+For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 98GB, and created two volumes, one is 48G(**/dev/sda**) for Linux OS we called it as "**system volume**", another one 50G(**/dev/sdb**) for store the PBX data, we called it as "**data volume**".
 
-In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.103.The VIP (virtual IP) used in this example is 192.168.78.90.
+You are free to decide the disk size, but the size must be same with all servers.
+
+In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.103, the VIP (virtual IP) used in this example is 192.168.78.90.
 
 Please change the host names and IP addresses of the three node machines as follows:
 
@@ -18,9 +22,7 @@ Please change the host names and IP addresses of the three node machines as foll
 ```
 
 
-
-
-The OS version is requires CentOS 7.9.
+The OS version is requires **Ubuntu 20.04**.
 
 
 
@@ -56,47 +58,89 @@ PortSIP PBX HA The principle of the scheme is as follows：
 
 ## Select language and keyboard type
 
-![5B94C772-64BA-46f6-B42A-014724B78AF8.png](images/5B94C772-64BA-46f6-B42A-014724B78AF8.png)
+![5B94C772-64BA-46f6-B42A-014724B78AF2.png](images/5B94C772-64BA-46f6-B42A-014724B78AF2.png)
 
 
+
+![5B94C772-64BA-46f6-B42A-014724B78AF3.png](images/5B94C772-64BA-46f6-B42A-014724B78AF3.png)
 
 ## Choose minimize installation
 
-![56951B7A-9F0D-43c4-A1B0-4B9FD7EA5C59.png](images/56951B7A-9F0D-43c4-A1B0-4B9FD7EA5C59.png)
+### Network connections [default]
+
+![5B94C772-64BA-46f6-B42A-014724B78AF4.png](images/5B94C772-64BA-46f6-B42A-014724B78AF4.png)
 
 
 
-## Disk partition
+### Configure Proxy [default]
 
-![CBBF43C7-B7DC-4971-AA9C-47ADA8C3377D.png](images/CBBF43C7-B7DC-4971-AA9C-47ADA8C3377D.png)
-
-
-
-### Choose "Automatically configure partitioning"
-
-Only need to select the disk volume "**sda**", don't touch the "**sdb**".
-
-![5B94C772-64BA-46f6-B42A-014724B78AF1.png](images/5B94C772-64BA-46f6-B42A-014724B78AF1.png)
+![5B94C772-64BA-46f6-B42A-014724B78AF5.png](images/5B94C772-64BA-46f6-B42A-014724B78AF5.png)
 
 
 
+### Configure Ubuntu archive mirror [default]
 
-
-## Start installing the system
-
-![C1B36BF3-04E5-4013-A76E-242EAD049820.png](images/C1B36BF3-04E5-4013-A76E-242EAD049820.png)
-
-
-
-## Set root password
-
-![7058CFB4-FB19-4a4c-970C-7E5DE71CE97A.png](images/20210123152344.png)
+![5B94C772-64BA-46f6-B42A-014724B78AF6.png](images/5B94C772-64BA-46f6-B42A-014724B78AF6.png)
 
 
 
-## Boot to check whether the kernel version is consistent with the tutorial
+### Guided storage configuration [Default]
 
-![7619DA48-285D-4a85-9200-8272DC19C495.png](images/7619DA48-285D-4a85-9200-8272DC19C495.png)
+![5B94C772-64BA-46f6-B42A-014724B78AF7.png](images/5B94C772-64BA-46f6-B42A-014724B78AF7.png)
+
+
+
+### Storage configuration [default]
+
+**Note**: /dev/sdb state is `unused`
+
+![5B94C772-64BA-46f6-B42A-014724B78AF9.png](images/5B94C772-64BA-46f6-B42A-014724B78AF9.png)
+
+
+
+![5B94C772-64BA-46f6-B42A-014724B78AFA.png](images/5B94C772-64BA-46f6-B42A-014724B78AFA.png)
+
+
+
+### Profile setup
+
+Enter the information in the fields.
+
+![5B94C772-64BA-46f6-B42A-014724B78AFB.png](images/5B94C772-64BA-46f6-B42A-014724B78AFB.png)
+
+
+
+### SSH Setup
+
+**Enable** OpenSSH server
+
+![5B94C772-64BA-46f6-B42A-014724B78AFC.png](images/5B94C772-64BA-46f6-B42A-014724B78AFC.png)
+
+
+
+### Featured Server Snaps [default]
+
+![5B94C772-64BA-46f6-B42A-014724B78AFD.png](images/5B94C772-64BA-46f6-B42A-014724B78AFD.png)
+
+
+
+
+
+### Installing system
+
+Start to install the OS and waiting...
+
+![5B94C772-64BA-46f6-B42A-014724B78AFE.png](images/5B94C772-64BA-46f6-B42A-014724B78AFE.png)
+
+
+
+### Install complete
+
+​	After installation completed, reboot it.
+
+![5B94C772-64BA-46f6-B42A-014724B78AFF.png](images/5B94C772-64BA-46f6-B42A-014724B78AFF.png)
+
+
 
 
 
@@ -108,12 +152,19 @@ Perform the following command only at the master node, that is, node pbx01.
 [root@pbx01 ~]# wget https://www.portsip.com/downloads/ha/lan/portsip-pbx-ha-guide-12-online.tar.gz && tar xf portsip-pbx-ha-guide-12-online.tar.gz && cd portsip-pbx-ha-guide
 ```
 
+
+
 # Install ansible
+
 Perform the following command only at the master node, that is, node pbx01.
 
 ```shell
-[root@pbx01 ~]# yum install epel-release -y  && yum install ansible -y && yum remove epel-release
+[root@pbx01:~]# apt update -y
+[root@pbx01:~]# apt install -y ansible
+[root@pbx01:~]# sed -i 's#\#log_path = /var/log/ansible.log#log_path = /var/log/ansible.log#g' /etc/ansible/ansible.cfg
 ```
+
+
 
 # Set ansible resource group
 
@@ -220,7 +271,9 @@ The key's randomart image is:
 
 # Set variables
 
-| 参数名            | 类型   | 说明                                                         |
+Please prepare the value for the below Variables.
+
+| Name              | Type   | Description                                                  |
 | ----------------- | ------ | ------------------------------------------------------------ |
 | pbx01_hostname    | string | The hostname of node 1, in this case is pbx01                |
 | pbx02_hostname    | string | The hostname of node 2, in this case is pbx02                |
@@ -234,7 +287,7 @@ The key's randomart image is:
 | pbx_datapath_disk | string | The disk volume for PBX data store in this case is /dev/sdb  |
 | pbx_datapath_size | string | The disk volume  size for PBX data store，in this case is 49G（If use 50G maybe report error）<br>For example if the disk volume size is 500G , suggest set as 490G. |
 
-**Note, please replace the value of above variables**
+
 
 The following command is only executed on the master node, that is, node pbx01.
 **Pay attention to change the information about pbx01, pbx02, pbx03, VIP and pbx_datapath_size to your own real information.**
@@ -310,14 +363,19 @@ After entering the web management interface of PBX, under the menu **advanced > 
 
 ![1429EB62-20EB-408f-9462-08A085F6707D.png](images/1429EB62-20EB-408f-9462-08A085F6707D.png)
 
+
+
 # Several common commands
+
 ```
 Based on /root/portsip-pbx-ha-guide directory
 ```
 
+
+
 ## View PBX status
 
-```
+```shell
 /bin/bash ./bin/pbx-status
 
 The following output shows that all components are running normally. Pbx03 is the master, pbx01 and pbx02 are slave nodes
@@ -334,10 +392,12 @@ The following output shows that all components are running normally. Pbx03 is th
 ```
 
 
+
 ## Restart PBX resource
+
 After the following command is executed, the PBX related resources of the whole cluster will be restarted.
 
-```
+```shell
 /bin/bash ./bin/pbx-restart
 
 

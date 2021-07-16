@@ -9,7 +9,9 @@ In the examples used in this manual, a total of three servers are used (PBX node
 
 For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 98GB, and created two volumes, one is 48G(**/dev/sda**) for Linux OS we called it as "**system volume**", another one 50G(**/dev/sdb**) for store the PBX data, we called it as "**data volume**".
 
-In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.103.The VIP (virtual IP) used in this example is 192.168.78.90.
+You are free to decide the disk size, but the size must be same with all servers.
+
+In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.103, the VIP (virtual IP) used in this example is 192.168.78.90.
 
 Please change the host names and IP addresses of the three node machines as follows:
 
@@ -222,7 +224,9 @@ The key's randomart image is:
 
 # Set variables
 
-| 参数名            | 类型   | 说明                                                         |
+Please prepare the value for the below Variables.
+
+| Name              | Type   | Description                                                  |
 | ----------------- | ------ | ------------------------------------------------------------ |
 | pbx01_hostname    | string | The hostname of node 1, in this case is pbx01                |
 | pbx02_hostname    | string | The hostname of node 2, in this case is pbx02                |
@@ -236,7 +240,7 @@ The key's randomart image is:
 | pbx_datapath_disk | string | The disk volume(**data volume**) for PBX data store in this case is **/dev/sdb** |
 | pbx_datapath_size | string | The disk volume(**data volume, /dev/sdb**)  size for store the PBX data，in this case is 49G（If use 50G maybe report error）<br>For example if the disk volume size is 500G , suggest set as 490G. |
 
-**Note, please replace the value of above variables**
+
 
 The following command is only executed on the master node, that is, node pbx01.
 **Pay attention to change the information about pbx01, pbx02, pbx03, VIP and pbx_datapath_size to your own real information.**
