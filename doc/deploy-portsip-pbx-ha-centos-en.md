@@ -3,6 +3,8 @@
 
 # Introduction
 
+This manual is for guide deploy the PortSIP HA on CentOS.
+
 In the examples used in this manual, a total of three servers are used (PBX nodes are used to refer to servers in the following, if three PBX nodes or all PBX nodes refer to three servers, master node and node 1 refer to pbx01, node 2 refer to pbx02, and node 3 refer to pbx03). 
 
 For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 100GB, and created two volumes, one is 48G for Linux OS, another volume 50 for store the PBX data.
