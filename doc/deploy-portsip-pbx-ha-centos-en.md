@@ -7,7 +7,7 @@ This manual is for guide deploy the PortSIP HA on CentOS 7.9.
 
 In the examples used in this manual, a total of three servers are used (PBX nodes are used to refer to servers in the following, if three PBX nodes or all PBX nodes refer to three servers, master node and node 1 refer to pbx01, node 2 refer to pbx02, and node 3 refer to pbx03). 
 
-For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 100GB, and created two volumes, one is 48G for Linux OS, another volume 50 for store the PBX data.
+For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 98GB, and created two volumes, one is 48G(**/dev/sda**) for Linux OS we called it as "**system volume**", another one 50G(**/dev/sdb**) for store the PBX data, we called it as "**data volume**".
 
 In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.103.The VIP (virtual IP) used in this example is 192.168.78.90.
 
@@ -233,8 +233,8 @@ The key's randomart image is:
 | vip               | string | The virtual IP in this case is 192.168.78.90                 |
 | pcs_hacluster_pwd | string | The HA cluster user password, in this case is 123456         |
 | pbx_image         | string | PortSIP PBX docker image  in this case is portsip/pbx:12.6   |
-| pbx_datapath_disk | string | The disk volume for PBX data store in this case is /dev/sdb  |
-| pbx_datapath_size | string | The disk volume  size for PBX data store，in this case is 49G（If use 50G maybe report error）<br>For example if the disk volume size is 500G , suggest set as 490G. |
+| pbx_datapath_disk | string | The disk volume(**data volume**) for PBX data store in this case is **/dev/sdb** |
+| pbx_datapath_size | string | The disk volume(**data volume, /dev/sdb**)  size for store the PBX data，in this case is 49G（If use 50G maybe report error）<br>For example if the disk volume size is 500G , suggest set as 490G. |
 
 **Note, please replace the value of above variables**
 
