@@ -7,7 +7,7 @@ In the examples used in this manual, a total of three servers are used (PBX node
 
 For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 100GB, and created two volumes, one is 48G for Linux OS, another volume 50 for store the PBX data.
 
-In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.101.The VIP (virtual IP) used in this example is 192.168.78.90.
+In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.103.The VIP (virtual IP) used in this example is 192.168.78.90.
 
 Please change the host names and IP addresses of the three node machines as follows:
 
