@@ -7,7 +7,7 @@ In the examples used in this manual, a total of three servers are used (PBX node
 
 For deploy the HA, it requires have two disk volume. In this example the hard disk of each server is 100GB, and created two volumes, one is 48G for Linux OS, another volume 50 for store the PBX data.
 
-In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.101.The VIP (virtual IP) used in this example is 192.168.78.90.
+In this example we deploy the HA on three servers which have the IP: 192.168.78.101, 192.168.78.102, 192.168.78.103.The VIP (virtual IP) used in this example is 192.168.78.90.
 
 Please change the host names and IP addresses of the three node machines as follows:
 
@@ -20,7 +20,7 @@ Please change the host names and IP addresses of the three node machines as foll
 
 
 
-The OS image used is **centos-7-x86_ 64-minimal-2009.iso** (this image has been strictly tested by us and can be successfully installed in a no network environment. The image of other versions may need to be upgraded because the kernel version is too low, resulting in installation failure.)
+The OS version is requires CentOS 7.9.
 
 
 
@@ -45,7 +45,7 @@ PortSIP PBX HA The principle of the scheme is as follows：
 
 >2. Please change the host names of the three nodes to pbx01, pbx02 and pbx03
 
->3. It is recommended to configure 4-core 4G hardware. If it is lower than 2-core 2G, ha handoff will be affected by hardware, and call recovery time will increase
+>3. It is recommended to configure 4 cores CPU and 4G memory hardware. If it is lower than 2-cores CPU or 2G memory, ha handoff will be affected by hardware, and call recovery time will increase
 
 
 
@@ -306,13 +306,13 @@ The first step of the setup wizard is to fill in the virtual IP. You need to rep
 
 
 
-After entering the web management interface of PBX, under the menu * * advanced > Settings > Advanced * * page, check * * enable call recovery * * and click the "* * apply * *" button.
+After entering the web management interface of PBX, under the menu **advanced > Settings > Advanced** page, check **enable call recovery** and click the "**apply**" button.
 
 ![1429EB62-20EB-408f-9462-08A085F6707D.png](images/1429EB62-20EB-408f-9462-08A085F6707D.png)
 
 # Several common commands
 ```
-Based on / root / portsip PBX ha guide directory
+Based on /root/portsip-pbx-ha-guide directory
 ```
 
 ## View PBX status
