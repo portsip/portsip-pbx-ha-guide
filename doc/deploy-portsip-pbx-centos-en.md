@@ -306,7 +306,7 @@ The first step of the setup wizard is to fill in the virtual IP. You need to rep
 
 
 
-After entering the web management interface of PBX, under the menu * * advanced > Settings > Advanced * * page, check * * enable call recovery * * and click the "* * apply * *" button.
+After entering the web management interface of PBX, under the menu **advanced > Settings > Advanced** page, check **enable call recovery** and click the "**apply**" button.
 
 ![1429EB62-20EB-408f-9462-08A085F6707D.png](images/1429EB62-20EB-408f-9462-08A085F6707D.png)
 
