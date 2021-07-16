@@ -312,7 +312,7 @@ After entering the web management interface of PBX, under the menu **advanced > 
 
 # Several common commands
 ```
-Based on / root / portsip PBX ha guide directory
+Based on /root/portsip-pbx-ha-guide directory
 ```
 
 ## View PBX status
