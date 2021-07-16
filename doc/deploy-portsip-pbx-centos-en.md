@@ -45,7 +45,7 @@ PortSIP PBX HA The principle of the scheme is as follows：
 
 >2. Please change the host names of the three nodes to pbx01, pbx02 and pbx03
 
->3. It is recommended to configure 4-core 4G hardware. If it is lower than 2-core 2G, ha handoff will be affected by hardware, and call recovery time will increase
+>3. It is recommended to configure 4 cores CPU and 4G memory hardware. If it is lower than 2-cores CPU or 2G memory, ha handoff will be affected by hardware, and call recovery time will increase
 
 
 
