@@ -307,6 +307,7 @@ db_pwd: 123456
 pbx_image: portsip/pbx:12.6
 pbx_datapath_disk: /dev/sdb
 pbx_datapath_size: 49G
+EOF
 ```
 
 

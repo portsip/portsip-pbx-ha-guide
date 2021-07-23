@@ -116,7 +116,7 @@ Perform the following command only at the master node, that is, node pbx01.
 Perform the following command only at the master node, that is, node pbx01.
 
 ```shell
-[root@pbx01 ~]# yum install epel-release -y  && yum install ansible -y && yum remove epel-release
+[root@pbx01 ~]# yum install epel-release -y  && yum install ansible -y && yum remove epel-release -y
 ```
 
 # Set ansible resource group
@@ -260,6 +260,7 @@ db_pwd: 123456
 pbx_image: portsip/pbx:12.6
 pbx_datapath_disk: /dev/sdb
 pbx_datapath_size: 49G
+EOF
 ```
 
 

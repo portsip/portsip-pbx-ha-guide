@@ -99,7 +99,7 @@ PortSIP PBX HA 方案原理如下：
 # 安装ansible
 只在主节点也就是`节点 pbx01` 执行如下命令：
 ```shell
-[root@pbx01 ~]# yum install epel-release -y  && yum install ansible -y && yum remove epel-release
+[root@pbx01 ~]# yum install epel-release -y  && yum install ansible -y && yum remove epel-release -y
 ```
 
 # 设置ansible 资源组
