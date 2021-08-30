@@ -278,9 +278,9 @@ Please prepare the value for the below Variables.
 | pbx01_hostname    | string | The hostname of node 1, in this case is pbx01                |
 | pbx02_hostname    | string | The hostname of node 2, in this case is pbx02                |
 | pbx03_hostname    | string | The hostname of node 2, in this case is pbx02                |
-| pbx01_private_ip  | string | The private IP of node 1, in this case is 192.168.78.101     |
-| pbx02_private_ip  | string | The private IP of node 2, in this case is 192.168.78.102     |
-| pbx03_private_ip  | string | The private IP of node 3, in this case is 192.168.78.103     |
+| pbx01_private_ip  | string | The private **static** IP of node 1, in this case is 192.168.78.101 |
+| pbx02_private_ip  | string | The private **static** IP of node 2, in this case is 192.168.78.102 |
+| pbx03_private_ip  | string | The private **static** IP of node 3, in this case is 192.168.78.103 |
 | vip               | string | The virtual IP in this case is 192.168.78.90                 |
 | pcs_hacluster_pwd | string | The HA cluster user password, in this case is 123456         |
 | pbx_image         | string | PortSIP PBX docker image  in this case is portsip/pbx:12.6   |

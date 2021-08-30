@@ -201,9 +201,9 @@ The key's randomart image is:
 | pbx01_hostname    | 字符串 | 节点1主机名，当前示例为：pbx01                               |
 | pbx02_hostname    | 字符串 | 节点2主机名，当前示例为：pbx02                               |
 | pbx03_hostname    | 字符串 | 节点3主机名，当前示例为：pbx03                               |
-| pbx01_private_ip  | 字符串 | 节点1内网IP地址，当前示例为：192.168.78.101                  |
-| pbx02_private_ip  | 字符串 | 节点2内网IP地址，当前示例为：192.168.78.102                  |
-| pbx03_private_ip  | 字符串 | 节点3内网IP地址，当前示例为：192.168.78.103                  |
+| pbx01_private_ip  | 字符串 | 节点1内网**静态**IP地址，当前示例为：192.168.78.101          |
+| pbx02_private_ip  | 字符串 | 节点2内网**静态**IP地址，当前示例为：192.168.78.102          |
+| pbx03_private_ip  | 字符串 | 节点3内网**静态**IP地址，当前示例为：192.168.78.103          |
 | vip               | 字符串 | 虚拟IP地址，当前示例为：192.168.78.90                        |
 | pcs_hacluster_pwd | 字符串 | 集群依赖的系统用户hacluster密码，当前示例为：123456          |
 | pbx_image         | 字符串 | PortSIP PBX docker镜像，当前示例为：portsip/pbx:12.6         |
