@@ -318,3 +318,32 @@ datapath_fs successfully restarted
 pbx successfully restarted
 [root@pbx01 portsip-pbx-ha-guide]# 
 ```
+
+
+
+## 更新PBX版本
+
+**注意**: 更新操作之前，需要保证`PortSIP PBX`新版本兼容旧版本。<br/>
+
+**注意**: 只在主节点也就是`节点 pbx01`上进入如下修改或者操作。<br/>
+
+
+### 修改配置信息
+
+修改配置文件`/root/portsip-pbx-ha-guide/vars.yml`中`PortSIP PBX`的容器镜像版本。<br/>
+
+```
+...
+...
+pbx_image: [输入新的PortSIP PBX镜像版本信息]
+...
+...
+```
+
+
+
+### 更新
+
+```
+[root@pbx01 ~]# cd /root/portsip-pbx-ha-guide/ && ansible-playbook update.yml
+```
