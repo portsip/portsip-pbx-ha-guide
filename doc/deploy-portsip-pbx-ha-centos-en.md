@@ -362,10 +362,11 @@ pbx successfully restarted
 [root@pbx01 portsip-pbx-ha-guide]# 
 ```
 
+<br/>
 
 ## Upgrade PBX
 
-**注意**: Only at the master node, that is, pbx01, execute the following commands.<br/>
+**Important**: Only at the master node, that is, pbx01, perform the following commands.<br/>
 
 ### Update the script
 
@@ -376,7 +377,7 @@ pbx successfully restarted
                 cd portsip-pbx-ha-guide
 ```
 
-
+<br/>
 ### Modify the config file
 
 Edit the `PortSIP PBX` docker image version in `/root/portsip-pbx-ha-guide/vars.yml` .<br/>
@@ -389,7 +390,7 @@ pbx_image: [The new PBX docker image version, for example: portsip/pbx:12.6.4.91
 ...
 ```
 
-
+<br/>
 
 ### Upgrade
 
