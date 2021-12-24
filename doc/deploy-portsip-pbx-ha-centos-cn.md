@@ -92,7 +92,9 @@ PortSIP PBX HA 方案原理如下：
 
 ```shell
 [root@pbx01 ~] cd /root
-[root@pbx01 ~]# wget http://www.portsip.cn/downloads/ha/portsip-pbx-ha-guide-12-online.tar.gz && tar xf portsip-pbx-ha-guide-12-online.tar.gz && cd portsip-pbx-ha-guide
+[root@pbx01 ~]# wget http://www.portsip.cn/downloads/ha/portsip-pbx-ha-guide-12-online.tar.gz && \
+                tar xf portsip-pbx-ha-guide-12-online.tar.gz && \
+                cd portsip-pbx-ha-guide
 ```
 
 
