@@ -351,7 +351,7 @@ pbx successfully restarted
 
 **注意**: 更新操作之前，需要保证`PortSIP PBX`新版本兼容旧版本。<br/>
 
-**注意**: 只在主节点也就是`节点 pbx01`上进入如下修改或者操作。<br/>
+**注意**: 只在主节点也就是`节点 pbx01`上执行如下操作。<br/>
 
 ### 更新脚本
 
@@ -365,7 +365,7 @@ pbx successfully restarted
 
 ### 修改配置信息
 
-修改配置文件`/root/portsip-pbx-ha-guide/vars.yml`中`PortSIP PBX`的容器镜像版本。<br/>
+修改配置文件 `/root/portsip-pbx-ha-guide/vars.yml` 中`PortSIP PBX`的容器镜像版本。<br/>
 
 ```
 ...
