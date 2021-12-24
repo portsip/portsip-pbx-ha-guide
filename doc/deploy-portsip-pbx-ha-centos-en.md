@@ -369,7 +369,7 @@ pbx successfully restarted
 **Important**: Only at the master node, that is, pbx01, perform the following commands.<br/>
 <br/>
 
-### Update the script
+### Download and update the resource package
 
 ```shell
 [root@pbx01 ~] cd /root
