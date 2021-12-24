@@ -382,7 +382,7 @@ pbx successfully restarted
 
 ### Modify the config file
 
-Edit the `PortSIP PBX` docker image version in `/root/portsip-pbx-ha-guide/vars.yml` .<br/>
+Edit the `/root/portsip-pbx-ha-guide/vars.yml` to change the `PortSIP PBX` docker image version.<br/>
 
 ```
 ...
