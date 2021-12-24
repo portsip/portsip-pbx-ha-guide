@@ -109,7 +109,10 @@ Only need to select the disk volume "**sda**", don't touch the "**sdb**".
 Perform the following command only at the master node, that is, node pbx01.
 
 ```shell
-[root@pbx01 ~]# wget https://www.portsip.com/downloads/ha/lan/portsip-pbx-ha-guide-12-online.tar.gz && tar xf portsip-pbx-ha-guide-12-online.tar.gz && cd portsip-pbx-ha-guide
+[root@pbx01 ~]# cd /root
+[root@pbx01 ~]# wget https://www.portsip.com/downloads/ha/lan/portsip-pbx-ha-guide-12-online.tar.gz && \
+                tar xf portsip-pbx-ha-guide-12-online.tar.gz && \
+                cd portsip-pbx-ha-guide
 ```
 
 # Install ansible
@@ -357,4 +360,39 @@ src_pkt_ip successfully restarted
 datapath_fs successfully restarted
 pbx successfully restarted
 [root@pbx01 portsip-pbx-ha-guide]# 
+```
+
+
+## Upgrade PBX
+
+**注意**: Only at the master node, that is, pbx01, execute the following commands.<br/>
+
+### Update the script
+
+```shell
+[root@pbx01 ~] cd /root
+[root@pbx01 ~]# wget https://www.portsip.com/downloads/ha/lan/portsip-pbx-ha-guide-12-online.tar.gz && \
+                tar xf portsip-pbx-ha-guide-12-online.tar.gz && \
+                cd portsip-pbx-ha-guide
+```
+
+
+### Modify the config file
+
+Edit the `PortSIP PBX` docker image version in `/root/portsip-pbx-ha-guide/vars.yml` .<br/>
+
+```
+...
+...
+pbx_image: [The new PBX docker image version, for example: portsip/pbx:12.6.4.919-release]
+...
+...
+```
+
+
+
+### Upgrade
+
+```
+[root@pbx01 ~]# cd /root/portsip-pbx-ha-guide/ && ansible-playbook update.yml
 ```
