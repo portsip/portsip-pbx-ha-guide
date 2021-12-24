@@ -91,7 +91,7 @@ PortSIP PBX HA 方案原理如下：
 只在主节点也就是`节点 pbx01` 执行如下命令：
 
 ```shell
-[root@pbx01 ~] ce /root
+[root@pbx01 ~] cd /root
 [root@pbx01 ~]# wget http://www.portsip.cn/downloads/ha/portsip-pbx-ha-guide-12-online.tar.gz && tar xf portsip-pbx-ha-guide-12-online.tar.gz && cd portsip-pbx-ha-guide
 ```
 
@@ -322,7 +322,7 @@ pbx successfully restarted
 
 
 
-## 更新PBX版本
+## 更新 PBX 到最新版本
 
 **注意**: 更新操作之前，需要保证`PortSIP PBX`新版本兼容旧版本。<br/>
 
