@@ -330,8 +330,6 @@ pbx successfully restarted
 ### 更新脚本
 
 ```shell
-[root@pbx01 ~]# rm -rf portsip-pbx-ha-guide-12-online.tar.gz
-[root@pbx01 ~]# rm -rf portsip-pbx-ha-guide
 [root@pbx01 ~]# wget http://www.portsip.cn/downloads/ha/portsip-pbx-ha-guide-12-online.tar.gz && \
                 tar xf portsip-pbx-ha-guide-12-online.tar.gz && \
                 cd portsip-pbx-ha-guide
