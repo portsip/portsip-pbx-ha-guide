@@ -91,7 +91,7 @@ PortSIP PBX HA 方案原理如下：
 只在主节点也就是`节点 pbx01` 执行如下命令：
 
 ```shell
-[root@pbx01 ~]# wget http://www.portsip.cn/downloads/portsip-pbx-ha-guide-12-online.tar.gz && tar xf portsip-pbx-ha-guide-12-online.tar.gz && cd portsip-pbx-ha-guide
+[root@pbx01 ~]# wget http://www.portsip.cn/downloads/ha/portsip-pbx-ha-guide-12-online.tar.gz && tar xf portsip-pbx-ha-guide-12-online.tar.gz && cd portsip-pbx-ha-guide
 ```
 
 
