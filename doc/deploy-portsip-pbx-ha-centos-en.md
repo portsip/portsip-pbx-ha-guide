@@ -367,6 +367,7 @@ pbx successfully restarted
 ## Upgrade PBX
 
 **Important**: Only at the master node, that is, pbx01, perform the following commands.<br/>
+<br/>
 
 ### Update the script
 
@@ -378,6 +379,7 @@ pbx successfully restarted
 ```
 
 <br/>
+
 ### Modify the config file
 
 Edit the `PortSIP PBX` docker image version in `/root/portsip-pbx-ha-guide/vars.yml` .<br/>
