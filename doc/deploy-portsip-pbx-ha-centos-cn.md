@@ -327,6 +327,14 @@ pbx successfully restarted
 
 **注意**: 只在主节点也就是`节点 pbx01`上进入如下修改或者操作。<br/>
 
+### 更新脚本
+
+```shell
+[root@pbx01 ~]# rm -rf portsip-pbx-ha-guide-12-online.tar.gz
+[root@pbx01 ~]# rm -rf portsip-pbx-ha-guide
+[root@pbx01 ~]# wget http://www.portsip.cn/downloads/ha/portsip-pbx-ha-guide-12-online.tar.gz && tar xf portsip-pbx-ha-guide-12-online.tar.gz && cd portsip-pbx-ha-guide
+```
+
 
 ### 修改配置信息
 
@@ -335,7 +343,7 @@ pbx successfully restarted
 ```
 ...
 ...
-pbx_image: [输入新的PortSIP PBX镜像版本信息]
+pbx_image: [输入新的PortSIP PBX镜像版本信息, 例如: portsip/pbx:12.6.4.919-release]
 ...
 ...
 ```
