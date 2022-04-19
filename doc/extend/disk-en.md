@@ -79,7 +79,7 @@ EOF
 Perform the below commands in the node `pbx01` ：
 
 ```shell
-cd /root/portsip-pbx-ha-guide && ansible-playbook extend_disk.yml
+cd /root/portsip-pbx-ha-guide && ansible-playbook extend_disk.yaml
 ```
 
 ## Restart
