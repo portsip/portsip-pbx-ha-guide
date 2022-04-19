@@ -11,12 +11,12 @@
     pcs resource disable pbx
     ```
 
-- Bac kup the `PBX` data
+- Back kup the `PBX` data
   
     Show the master node infomation of `PBX HA`:
 
     ```shell
-    pcs status
+   pcs status |  grep Masters
     ```
     
     The command above will reveal the master node, all that is required is a backup of the master node's `/var/lib/pbx/portsip` folder.
