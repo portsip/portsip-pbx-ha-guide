@@ -18,7 +18,7 @@
     获取`HA`当前的主节点：
 
     ```shell
-    pcs status
+    pcs status |  grep Masters
     ```
     
     数据目录在主节点目录`/var/lib/pbx/portsip`中。
@@ -83,7 +83,7 @@ EOF
 只在`节点 pbx01` 执行如下命令：
 
 ```shell
-cd /root/portsip-pbx-ha-guide && ansible-playbook extend_disk.yml
+cd /root/portsip-pbx-ha-guide && ansible-playbook extend_disk.yaml
 ```
 
 ## 重启
