@@ -231,8 +231,8 @@ The key's randomart image is:
 | pbx03_private_ip  | 字符串 | 节点3内网**静态**IP地址，当前示例为：192.168.78.103          |
 | vip               | 字符串 | 虚拟IP地址，当前示例为：192.168.78.90                        |
 | pcs_hacluster_pwd | 字符串 | 集群依赖的系统用户hacluster密码，当前示例为：123456          |
-| db_pwd            | 字符串 | 集群中数据库密码，当前示例为：123456                          |
-| pbx_image         | 字符串 | PortSIP PBX docker镜像，当前示例为：portsip/pbx:12.6         |
+| db_pwd            | 字符串 | 集群中数据库密码，当前示例为：123456                         |
+| pbx_image         | 字符串 | PortSIP PBX docker镜像，当前示例为：portsip/pbx:12.7         |
 | pbx_datapath_disk | 字符串 | 数据磁盘符号路径，当前示例为：/dev/sdb                       |
 | pbx_datapath_size | 字符串 | 数据磁盘符大小，当前示例为：49G（直接使用50G可能报错空间不足）<br>比如数据盘大小是 500G 空间，建议使用 495G 或者 490G |
 
@@ -252,7 +252,7 @@ pbx03_private_ip: 192.168.78.103
 vip: 192.168.78.90
 pcs_hacluster_pwd: 123456
 db_pwd: 123456
-pbx_image: portsip/pbx:12.6
+pbx_image: portsip/pbx:12.7
 pbx_datapath_disk: /dev/sdb
 pbx_datapath_size: 49G
 EOF
