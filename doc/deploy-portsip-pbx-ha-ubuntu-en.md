@@ -142,6 +142,10 @@ Start to install the OS and waiting...
 
 
 
+## Configure IP acquisition method
+
+All nodes have fixed IP address and the way to obtain IP **MUST** be `static`, not `dhcp`.
+
 
 
 ## Download installation resource package

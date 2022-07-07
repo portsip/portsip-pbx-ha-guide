@@ -104,6 +104,12 @@ Only need to select the disk volume "**sda**", don't touch the "**sdb**".
 
 
 
+## Configure IP acquisition method
+
+All nodes have fixed IP address and the way to obtain IP **MUST** be `static`, not `dhcp`.
+
+
+
 ## Download installation resource package
 
 Perform the following command only at the master node, that is, node pbx01.
