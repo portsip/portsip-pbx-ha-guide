@@ -43,7 +43,7 @@ Enter the password according to the prompt. If `(yes / no)?` occurs, you need to
 
    ![Disable default media server](../images/8B94C25A-64BA-46f6-B42A-22A724B78FE6.png)
 
-3. Click the `Add` button, enter the information as the below screenshot.
+3. Click the `Add` button, enter the media server private IP and public IP as the below screenshot. If the media server is no public IP, just enter the private as the public IP; if the media server is no private IP, just enter the public IP as the private IP.
 
    ![Add new media server](../images/E678CF1B-123C-4611-9264-0A973A7590E8.png)
 
