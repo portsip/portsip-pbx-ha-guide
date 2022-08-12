@@ -53,6 +53,9 @@ PortSIP PBX HA The principle of the scheme is as follows：
 
 >4. Important: the date and time must be synchronized between the PBX nodes!
 
+>5. Important: please strictly follow each step of the document and do not do too many other operations, otherwise problems will easily occur during the deployment process
+
+
 
 # Installation system
 
@@ -93,8 +96,9 @@ Only need to select the disk volume "**sda**", don't touch the "**sdb**".
 
 
 ## Set root password
+Important: the number of installation packages in this example is: 301, please install strictly according to the number of installation packages, otherwise the deployment process may fail
 
-![7058CFB4-FB19-4a4c-970C-7E5DE71CE97A.png](images/20210123152344.png)
+![7058CFB4-FB19-4a4c-970C-7E5DE71CE97A.png](images/20220812103944.png)
 
 
 
