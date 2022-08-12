@@ -51,7 +51,7 @@ PortSIP PBX HA The principle of the scheme is as follows：
 
 >4. Important: the date and time must be synchronized between the PBX nodes!
 
-
+>5. Important: please strictly follow each step of the document and do not do too many other operations, otherwise problems will easily occur during the deployment process
 
 # Installation system
 
