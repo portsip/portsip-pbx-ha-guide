@@ -243,7 +243,7 @@ pbx03_private_ip: 192.168.78.103
 vip: 192.168.78.90
 pcs_hacluster_pwd: 123456
 db_pwd: 123456
-pbx_image: portsip/pbx:12.7
+pbx_image: portsip/pbx:12.8
 pbx_datapath_disk: /dev/sdb
 pbx_datapath_size: 49G
 EOF
@@ -360,7 +360,7 @@ pbx successfully restarted
 ```
 ...
 ...
-pbx_image: portsip/pbx:12.7.2.1309-release
+pbx_image: portsip/pbx:12.8.0.1480-release
 ...
 ...
 ```
