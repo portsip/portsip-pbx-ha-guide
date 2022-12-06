@@ -250,7 +250,7 @@ Please prepare the value for the below Variables.
 | vip               | string | The virtual IP in this case is 192.168.78.90                 |
 | pcs_hacluster_pwd | string | The HA cluster user password, in this case is 123456         |
 | db_pwd            | string | The database password in the cluster, in this case is 123456 |
-| pbx_image         | string | PortSIP PBX docker image  in this case is portsip/pbx:12.7   |
+| pbx_image         | string | PortSIP PBX docker image  in this case is portsip/pbx:12.8   |
 | pbx_datapath_disk | string | The disk volume(**data volume**) for PBX data store in this case is **/dev/sdb** |
 | pbx_datapath_size | string | The disk volume(**data volume, /dev/sdb**)  size for store the PBX data，in this case is 49G（If use 50G maybe report error）<br>For example if the disk volume size is 500G , suggest set as 490G. |
 
@@ -271,7 +271,7 @@ pbx03_private_ip: 192.168.78.103
 vip: 192.168.78.90
 pcs_hacluster_pwd: 123456
 db_pwd: 123456
-pbx_image: portsip/pbx:12.7
+pbx_image: portsip/pbx:12.8
 pbx_datapath_disk: /dev/sdb
 pbx_datapath_size: 49G
 EOF
@@ -397,7 +397,7 @@ Edit the `/root/portsip-pbx-ha-guide/vars.yml` to change the `PortSIP PBX` docke
 ```
 ...
 ...
-pbx_image: portsip/pbx:12.7.2.1309-release
+pbx_image: portsip/pbx:12.8.0.1480-release
 ...
 ...
 ```
